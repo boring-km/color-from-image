@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -9,8 +8,8 @@ import 'package:image/image.dart' as lib;
 class PickerViewModel extends GetxController {
 
   RxList<Color> colors = <Color>[].obs;
-  var numberOfRealPixels = 32;
-  static const numberOfSpecialColors = 32;
+  var pixelWidthCount = 32;
+  var pixelHeightCount = 1.obs;
 
   RxList<Color> sortedColors = <Color>[].obs;
 
@@ -45,11 +44,13 @@ class PickerViewModel extends GetxController {
     int? width = image.width;
     int? height = image.height;
 
-    int xChunk = width~/ (numberOfRealPixels + 1);
-    int yChunk = height~/ (numberOfRealPixels + 1);
+    pixelHeightCount = (pixelWidthCount * (height / width)).toInt().obs;
 
-    for (int j = 1; j < numberOfRealPixels + 1; j++) {
-      for (int i = 1; i < numberOfRealPixels + 1; i++) {
+    int xChunk = width~/ (pixelWidthCount + 1);
+    int yChunk = height~/ (pixelHeightCount.value + 1);
+
+    for (int j = 1; j < pixelHeightCount.value + 1; j++) {
+      for (int i = 1; i < pixelWidthCount + 1; i++) {
         int pixel = image.getPixel(xChunk * i, yChunk * j);
         pixels.add(pixel);
         colors.add(abgrToColor(pixel));

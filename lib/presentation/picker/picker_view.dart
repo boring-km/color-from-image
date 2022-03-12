@@ -16,35 +16,42 @@ class PickerView extends GetView<PickerViewModel> {
           child: ListView(
             children: [
               SizedBox(
-                height: context.height / 2,
+                height: context.height / 3,
                 child: Align(
                   alignment: Alignment.center,
-                  child: Obx(() => Image.file(
-                        File(controller.originalImageFile.value),
-                        width: context.width * (3 / 4),
-                        errorBuilder: (context, _, trace) {
-                          return const Icon(CupertinoIcons.clear_thick);
-                        },
-                      )),
+                  child: Image.file(
+                    File(controller.originalImageFile.value),
+                    height: context.width * (3 / 4),
+                    errorBuilder: (context, _, trace) {
+                      return const Icon(CupertinoIcons.clear_thick);
+                    },
+                  ),
                 ),
               ),
-              SizedBox(
-                height: context.height / 2,
-                child: GridView.builder(
-                  itemCount: controller.colors.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: controller.numberOfRealPixels,
-                    childAspectRatio: 1,
-                    mainAxisSpacing: 0,
-                    crossAxisSpacing: 0,
+              const SizedBox(
+                height: 16,
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  height: context.height * (2 / 3),
+                  child: GridView.builder(
+                    itemCount: controller.colors.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: controller.pixelWidthCount,
+                      childAspectRatio: 1,
+                      mainAxisSpacing: 0,
+                      crossAxisSpacing: 0,
+                    ),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.all(0.0),
+                        decoration: BoxDecoration(
+                          color: controller.colors[index],
+                        ),
+                      );
+                    },
                   ),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: controller.colors[index],
-                      ),
-                    );
-                  },
                 ),
               ),
             ],
