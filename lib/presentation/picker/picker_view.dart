@@ -44,7 +44,17 @@ class PickerView extends GetView<PickerViewModel> {
                 const SizedBox(
                   height: 16,
                 ),
-                Text(controller.colorInfo),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 20, height: 20,
+                      color: controller.selectedColor,
+                    ),
+                    const SizedBox(width: 10,),
+                    Text(controller.colorInfo),
+                  ],
+                ),
                 const SizedBox(
                   height: 16,
                 ),
