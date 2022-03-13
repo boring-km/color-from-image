@@ -10,6 +10,10 @@ class SelectView extends GetView<SelectViewModel> {
     final width = context.width;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: const Text('Color Extractor'),
+      ),
       body: SafeArea(
         child: Center(
           child: Row(
