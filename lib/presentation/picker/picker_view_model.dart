@@ -8,7 +8,7 @@ import 'package:image/image.dart' as lib;
 
 class PickerViewModel extends GetxController {
   RxList<Color> colors = <Color>[].obs;
-  var pixelWidthCount = 32;
+  var pixelWidthCount = 64;
   var pixelHeightCount = 1.obs;
 
   RxList<Color> sortedColors = <Color>[].obs;
@@ -32,9 +32,14 @@ class PickerViewModel extends GetxController {
 
   Uint8List getOriginalImage() {
     var filePath = Get.arguments['path'] as String? ?? '';
-    originalImageFile = File(filePath).path.obs;
-    var imageBytes = File(filePath).readAsBytesSync();
-    return imageBytes;
+    var file = File(filePath);
+    originalImageFile = file.path.obs;
+    if (file.existsSync()) {
+      var imageBytes = file.readAsBytesSync();
+      return imageBytes;
+    } else {
+      return Uint8List(0);
+    }
   }
 
   getPixelImage() async {
