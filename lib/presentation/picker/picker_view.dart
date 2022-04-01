@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:color_picker/presentation/picker/image_painter.dart';
 import 'package:color_picker/presentation/picker/picker_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class PickerView extends GetView<PickerViewModel> {
                 SizedBox(
                   height: context.height * (2 / 3),
                   child: Align(
-                    alignment: Alignment.center,
+                    alignment: Alignment.topLeft,
                     child: GetBuilder<PickerViewModel>(
                       builder: (controller) {
                         return showSelectedImage(controller);
@@ -60,9 +61,7 @@ class PickerView extends GetView<PickerViewModel> {
                 ),
                 Obx(
                   () => ElevatedButton(
-                    onPressed: () {
-                      controller.showPixelImages();
-                    },
+                    onPressed: controller.showPixelImages,
                     style: ElevatedButton.styleFrom(
                       primary: Colors.black,
                     ),
@@ -84,31 +83,10 @@ class PickerView extends GetView<PickerViewModel> {
         opacity: controller.isOriginalImageVisible ? 0.0 : 1.0,
         child: SizedBox(
           width: Get.context!.width * (3 / 4),
-          child: GridView.builder(
-            itemCount: controller.colors.length,
-            shrinkWrap: true,
-            primary: true,
-            padding: const EdgeInsets.all(0),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: controller.pixelWidthCount,
-              childAspectRatio: 1,
-              mainAxisSpacing: 0,
-              crossAxisSpacing: 0,
-            ),
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () => controller.getColorInfo(index),
-                child: Container(
-                  padding: const EdgeInsets.all(0.0),
-                  decoration: BoxDecoration(
-                    color: controller.colors[index],
-                    border: controller.isSelectedIndex(index)
-                        ? Border.all(color: Colors.red, width: 1)
-                        : null,
-                  ),
-                ),
-              );
-            },
+          child: ImagePainter(
+            colors: controller.colors,
+            xCount: controller.pixelWidthCount,
+            yCount: controller.pixelHeightCount,
           ),
         ),
       );

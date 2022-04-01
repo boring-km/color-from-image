@@ -1,15 +1,17 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:color_picker/core/logger.dart';
 import 'package:color_picker/core/math.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as lib;
 
 class PickerViewModel extends GetxController {
+
   RxList<Color> colors = <Color>[].obs;
-  var pixelWidthCount = 64;
-  var pixelHeightCount = 1.obs;
+  var pixelWidthCount = 128;
+  var pixelHeightCount = 1;
 
   RxList<Color> sortedColors = <Color>[].obs;
 
@@ -42,30 +44,30 @@ class PickerViewModel extends GetxController {
     }
   }
 
-  getPixelImage() async {
+  Future<void> _getPixelImage() async {
     var filePath = Get.arguments['path'] as String? ?? '';
     if (filePath.isEmpty) return;
 
     Uint8List bytes = getOriginalImage();
 
     List<int> values = bytes.buffer.asUint8List();
-    final image = lib.decodeImage(values)!;
-
-    List<int> pixels = [];
+    final lib.Image image = lib.decodeImage(values)!;
 
     int? width = image.width;
     int? height = image.height;
 
-    pixelHeightCount = (pixelWidthCount * (height / width)).toInt().obs;
+    pixelHeightCount = (pixelWidthCount * (height / width)).toInt();
 
     int xChunk = width ~/ (pixelWidthCount + 1);
-    int yChunk = height ~/ (pixelHeightCount.value + 1);
+    int yChunk = height ~/ (pixelHeightCount + 1);
 
     colors.clear();
-    for (int j = 1; j < pixelHeightCount.value + 1; j++) {
+
+    Log.i('width: $pixelWidthCount, height: $pixelHeightCount');
+
+    for (int j = 1; j < pixelHeightCount + 1; j++) {
       for (int i = 1; i < pixelWidthCount + 1; i++) {
         int pixel = image.getPixel(xChunk * i, yChunk * j);
-        pixels.add(pixel);
         colors.add(abgrToColor(pixel));
       }
     }
@@ -79,19 +81,21 @@ class PickerViewModel extends GetxController {
   }
 
   showPixelImages() async {
-    changeButtonText();
-    getPixelImage();
-    changeShowStateAfter500milliseconds();
+    // TODO Loading Animation Show
+    _changeButtonText();
+    await _getPixelImage();
+    await _changeShowStateAfter500milliseconds();
+    // TODO Loading Animation Hide
   }
 
-  Future<void> changeShowStateAfter500milliseconds() async {
+  Future<void> _changeShowStateAfter500milliseconds() async {
     await Future.delayed(const Duration(milliseconds: 500), () {
       isPixelShow = !isPixelShow;
       update();
     });
   }
 
-  changeButtonText() {
+  _changeButtonText() {
     isOriginalImageVisible = !isOriginalImageVisible;
     showButtonText =
         isOriginalImageVisible ? 'Show Pixels'.obs : 'Show Original'.obs;
