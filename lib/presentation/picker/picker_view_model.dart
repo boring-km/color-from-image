@@ -32,7 +32,8 @@ class PickerViewModel extends GetxController {
   }
 
   void _setImageWidth() {
-    lib.Image image = _getImageFromFile();
+    // TODO 초기 값 다시 지정 필요함
+    // lib.Image image = _getImageFromFile();
     // pixelWidthCount = image.width;
     pixelInputController.text = '$pixelWidthCount';
   }
