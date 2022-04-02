@@ -8,68 +8,75 @@ import 'package:get/get.dart';
 import 'package:image/image.dart' as lib;
 
 class PickerViewModel extends GetxController {
-
   RxList<Color> colors = <Color>[].obs;
-  var pixelWidthCount = 128;
-  var pixelHeightCount = 1;
-
+  int pixelWidthCount = 128;
+  int pixelHeightCount = 1;
   RxList<Color> sortedColors = <Color>[].obs;
-
-  var originalImageFile = ''.obs;
-  var isOriginalImageVisible = true;
-  var isPixelShow = false;
-
+  RxString originalImageFile = ''.obs;
+  bool isPixelShow = false;
   String colorInfo = '';
-  var showButtonText = 'Show Pixels'.obs;
-
+  RxString showButtonText = 'Show Pixels'.obs;
   int selectedIndex = -1;
-
   Color selectedColor = Colors.white;
+
+  File get originalFile => File(Get.arguments['path'] as String? ?? '');
+  final pixelInputController = TextEditingController();
+  String imageSizeString = '';
 
   @override
   void onInit() {
-    getOriginalImage();
     super.onInit();
+
+    _setImageWidth();
+    showPixelImages();
   }
 
-  Uint8List getOriginalImage() {
-    var filePath = Get.arguments['path'] as String? ?? '';
-    var file = File(filePath);
-    originalImageFile = file.path.obs;
-    if (file.existsSync()) {
-      var imageBytes = file.readAsBytesSync();
-      return imageBytes;
-    } else {
-      return Uint8List(0);
-    }
+  void _setImageWidth() {
+    lib.Image image = _getImageFromFile();
+    // pixelWidthCount = image.width;
+    pixelInputController.text = '$pixelWidthCount';
   }
 
-  Future<void> _getPixelImage() async {
-    var filePath = Get.arguments['path'] as String? ?? '';
-    if (filePath.isEmpty) return;
+  showPixelImages() async {
+    await _getPixelImage();
+    await _changeShowStateAfter500milliseconds();
+  }
 
-    Uint8List bytes = getOriginalImage();
-
-    List<int> values = bytes.buffer.asUint8List();
-    final lib.Image image = lib.decodeImage(values)!;
+  _getPixelImage() async {
+    lib.Image image = _getImageFromFile();
 
     int? width = image.width;
     int? height = image.height;
 
     pixelHeightCount = (pixelWidthCount * (height / width)).toInt();
 
-    int xChunk = width ~/ (pixelWidthCount + 1);
-    int yChunk = height ~/ (pixelHeightCount + 1);
+    int chunk = width ~/ (pixelWidthCount + 1);
 
     colors.clear();
 
     Log.i('width: $pixelWidthCount, height: $pixelHeightCount');
 
-    for (int j = 1; j < pixelHeightCount + 1; j++) {
-      for (int i = 1; i < pixelWidthCount + 1; i++) {
-        int pixel = image.getPixel(xChunk * i, yChunk * j);
+    for (int y = 1; y < pixelHeightCount + 1; y++) {
+      for (int x = 1; x < pixelWidthCount + 1; x++) {
+        int pixel = image.getPixel(x * chunk, y * chunk);
         colors.add(abgrToColor(pixel));
       }
+    }
+  }
+
+  lib.Image _getImageFromFile() {
+    Uint8List bytes = _getImageBytes(originalFile);
+    List<int> values = bytes.buffer.asUint8List();
+    final lib.Image image = lib.decodeImage(values)!;
+    return image;
+  }
+
+  Uint8List _getImageBytes(File file) {
+    if (file.existsSync()) {
+      var imageBytes = file.readAsBytesSync();
+      return imageBytes;
+    } else {
+      return Uint8List(0);
     }
   }
 
@@ -80,26 +87,11 @@ class PickerViewModel extends GetxController {
     return Color(r | g | b);
   }
 
-  showPixelImages() async {
-    // TODO Loading Animation Show
-    _changeButtonText();
-    await _getPixelImage();
-    await _changeShowStateAfter500milliseconds();
-    // TODO Loading Animation Hide
-  }
-
   Future<void> _changeShowStateAfter500milliseconds() async {
     await Future.delayed(const Duration(milliseconds: 500), () {
       isPixelShow = !isPixelShow;
       update();
     });
-  }
-
-  _changeButtonText() {
-    isOriginalImageVisible = !isOriginalImageVisible;
-    showButtonText =
-        isOriginalImageVisible ? 'Show Pixels'.obs : 'Show Original'.obs;
-    update();
   }
 
   getColorInfo(int index) {
@@ -114,4 +106,12 @@ class PickerViewModel extends GetxController {
   }
 
   isSelectedIndex(int index) => index == selectedIndex;
+
+  void Function(String numberString) setPixelCount() {
+    return (String numberString) {
+      int pixel = int.parse(numberString);
+      pixelWidthCount = pixel;
+      update();
+    };
+  }
 }
