@@ -18,8 +18,7 @@ class ImagePainter extends StatefulWidget {
   State<ImagePainter> createState() => _ImagePainterState();
 }
 
-class _ImagePainterState extends State<ImagePainter>
-    with SingleTickerProviderStateMixin {
+class _ImagePainterState extends State<ImagePainter> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
@@ -46,18 +45,21 @@ class _PixelPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     double width = 0;
-    double screenWidth = Get.context?.size?.width ?? 800.0;
-    double screenHeight = Get.context?.size?.height ?? 1200.0;
+    double screenWidth = Get.context?.size?.width ?? 390.0;
+    double screenHeight = Get.context?.size?.height ?? 800.0;
+
+    double ratio = xCount / screenWidth;
+    Log.d('증가 단위: ${1 / ratio}');
 
     while (true) {
-      width++;
-      if (width * xCount >= screenWidth || width * yCount >= screenHeight) {
-        width--;
+      width += 1 / ratio;
+      if (width * xCount / ratio > screenWidth || width * yCount / ratio > screenHeight) {
+        width -= 1 / ratio;
         break;
       }
     }
 
-    Log.i('width: $width, xCount: $xCount, screenWidth: $screenWidth');
+    Log.d('width: $width, ratio: $ratio, xCount: $xCount, yCount: $yCount, image width: ${width * xCount / ratio} screen width: $screenWidth');
 
     for (int y = 0; y < yCount; y++) {
       for (int x = 0; x < xCount; x++) {
@@ -65,10 +67,7 @@ class _PixelPainter extends CustomPainter {
           ..color = colors[y * xCount + x]
           ..style = PaintingStyle.fill;
 
-        canvas.drawRect(
-            Offset(x.toDouble() * width, y.toDouble() * width) &
-                Size(width, width),
-            paint);
+        canvas.drawRect(Offset(x.toDouble() * width / ratio, y.toDouble() * width / ratio) & Size(width / ratio, width / ratio), paint);
       }
     }
   }

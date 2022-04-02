@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:color_picker/presentation/picker/image_painter.dart';
 import 'package:color_picker/presentation/picker/picker_view_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,97 +9,101 @@ class PickerView extends GetView<PickerViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: GestureDetector(
-          onTap: () => Get.back(),
-          child: Container(
-            width: 40,
-            height: 40,
-            color: Colors.transparent,
-            child: const Icon(CupertinoIcons.back),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          leading: GestureDetector(
+            onTap: () => Get.back(),
+            child: Container(
+              width: 40,
+              height: 40,
+              color: Colors.transparent,
+              child: const Icon(CupertinoIcons.back),
+            ),
           ),
+          title: const Text('Color Extractor'),
         ),
-        title: const Text('Color Extractor'),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: GetBuilder<PickerViewModel>(builder: (controller) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: context.height * (2 / 3),
-                  child: Align(
+        body: SafeArea(
+          child: Center(
+            child: GetBuilder<PickerViewModel>(builder: (controller) {
+              return Stack(
+                children: [
+                  Align(
                     alignment: Alignment.topLeft,
                     child: GetBuilder<PickerViewModel>(
                       builder: (controller) {
-                        return showSelectedImage(controller);
+                        return ImagePainter(
+                          colors: controller.colors,
+                          xCount: controller.pixelWidthCount,
+                          yCount: controller.pixelHeightCount,
+                        );
                       },
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 20, height: 20,
-                      color: controller.selectedColor,
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(controller.imageSizeString),
+                        ),
+                      ),
                     ),
-                    const SizedBox(width: 10,),
-                    Text(controller.colorInfo),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Obx(
-                  () => ElevatedButton(
-                    onPressed: controller.showPixelImages,
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                    ),
-                    child: Text(controller.showButtonText.value),
                   ),
-                ),
-              ],
-            );
-          }),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              height: 24,
+                              child: TextField(
+                                controller: controller.pixelInputController,
+                                keyboardType: TextInputType.number,
+                                onSubmitted: controller.setPixelCount(),
+                                decoration: const InputDecoration(
+                                  border: UnderlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(4),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => controller.showPixelImages(),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.black,
+                            ),
+                            child: const Text('픽셀 입력'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
-  }
-
-  Widget showSelectedImage(PickerViewModel controller) {
-    if (controller.isPixelShow) {
-      return AnimatedOpacity(
-        duration: const Duration(milliseconds: 500),
-        opacity: controller.isOriginalImageVisible ? 0.0 : 1.0,
-        child: SizedBox(
-          width: Get.context!.width * (3 / 4),
-          child: ImagePainter(
-            colors: controller.colors,
-            xCount: controller.pixelWidthCount,
-            yCount: controller.pixelHeightCount,
-          ),
-        ),
-      );
-    } else {
-      return AnimatedOpacity(
-        duration: const Duration(milliseconds: 500),
-        opacity: controller.isOriginalImageVisible ? 1.0 : 0.0,
-        child: Image.file(
-          File(controller.originalImageFile.value),
-          fit: BoxFit.cover,
-          errorBuilder: (context, _, trace) {
-            return const Icon(CupertinoIcons.clear_thick);
-          },
-        ),
-      );
-    }
   }
 }
