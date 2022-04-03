@@ -13,7 +13,6 @@ class PickerViewModel extends GetxController {
   int pixelHeightCount = 1;
   RxList<Color> sortedColors = <Color>[].obs;
   RxString originalImageFile = ''.obs;
-  bool isPixelShow = false;
   String colorInfo = '';
   RxString showButtonText = 'Show Pixels'.obs;
   int selectedIndex = -1;
@@ -49,13 +48,16 @@ class PickerViewModel extends GetxController {
     int? width = image.width;
     int? height = image.height;
 
+    Log.i('image size: $width x $height');
+
+    pixelWidthCount = int.parse(pixelInputController.text);
     pixelHeightCount = (pixelWidthCount * (height / width)).toInt();
 
     int chunk = width ~/ (pixelWidthCount + 1);
 
     colors.clear();
 
-    Log.i('width: $pixelWidthCount, height: $pixelHeightCount');
+    Log.i('width: $pixelWidthCount, height: $pixelHeightCount, pixel chunk: $chunk');
 
     for (int y = 1; y < pixelHeightCount + 1; y++) {
       for (int x = 1; x < pixelWidthCount + 1; x++) {
@@ -90,7 +92,6 @@ class PickerViewModel extends GetxController {
 
   Future<void> _changeShowStateAfter500milliseconds() async {
     await Future.delayed(const Duration(milliseconds: 500), () {
-      isPixelShow = !isPixelShow;
       update();
     });
   }

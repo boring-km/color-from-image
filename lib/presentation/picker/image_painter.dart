@@ -50,17 +50,19 @@ class _PixelPainter extends CustomPainter {
 
     double ratio = xCount / screenWidth;
     double chunk = ratio > 1 ? 1 / ratio : ratio;
-    Log.d('증가 단위: ${1 / ratio}');
+    Log.d('증가 단위: $chunk');
 
     while (true) {
-      width += chunk;
-      if (width * xCount / ratio > screenWidth || width * yCount / ratio > screenHeight) {
-        width -= chunk;
+      width += 0.00001;
+      if (width * xCount > screenWidth || width * yCount > screenHeight) {
+        width -= 0.00001;
         break;
       }
     }
 
-    Log.d('width: $width, chunk: $chunk, ratio: $ratio, xCount: $xCount, yCount: $yCount, image width: ${width * xCount / ratio}, screen width: $screenWidth');
+    Log.d('width: $width, chunk: $chunk, ratio: $ratio, xCount: $xCount, yCount: $yCount, screen width: $screenWidth');
+
+
 
     for (int y = 0; y < yCount; y++) {
       for (int x = 0; x < xCount; x++) {
@@ -68,7 +70,10 @@ class _PixelPainter extends CustomPainter {
           ..color = colors[y * xCount + x]
           ..style = PaintingStyle.fill;
 
-        canvas.drawRect(Offset(x.toDouble() * width / ratio, y.toDouble() * width / ratio) & Size(1 / chunk, 1 / chunk), paint);
+        final size = width / 2;
+        final rect = Rect.fromLTRB(x.toDouble() * width - size, y.toDouble() * width - size,
+            x.toDouble() * width + size, y.toDouble() * width + size);
+        canvas.drawRect(rect, paint);
       }
     }
   }
