@@ -2,47 +2,49 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:color_picker/core/logger.dart';
-import 'package:color_picker/core/math.dart';
+import 'package:color_picker/data/get_divisors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as lib;
 
 class PickerViewModel extends GetxController {
   RxList<Color> colors = <Color>[].obs;
-  int pixelWidthCount = 128;
+  int pixelWidthCount = 1;
   int pixelHeightCount = 1;
   RxList<Color> sortedColors = <Color>[].obs;
   RxString originalImageFile = ''.obs;
   String colorInfo = '';
-  RxString showButtonText = 'Show Pixels'.obs;
   int selectedIndex = -1;
   Color selectedColor = Colors.white;
+  List<int> pixelWidthList = <int>[];
 
   File get originalFile => File(Get.arguments['path'] as String? ?? '');
-  final pixelInputController = TextEditingController();
+  final TextEditingController pixelInputController = TextEditingController();
   String imageSizeString = '';
 
   @override
   void onInit() {
     super.onInit();
-
-    _setImageWidth();
-    showPixelImages();
+    pixelWidthCount = _setImageWidth() ~/ 4;
+    showPixelImages(pixelWidthCount);
   }
 
-  void _setImageWidth() {
+  _setImageWidth() {
     // TODO 초기 값 다시 지정 필요함
-    // lib.Image image = _getImageFromFile();
-    // pixelWidthCount = image.width;
-    pixelInputController.text = '$pixelWidthCount';
+    int pixelWidthCount = _getImageWidthFromFile();
+    pixelWidthList = GetDivisors.by(pixelWidthCount);
+    return pixelWidthCount;
   }
 
-  showPixelImages() async {
-    await _getPixelImage();
-    await _changeShowStateAfter500milliseconds();
+  int _getImageWidthFromFile() => _getImageFromFile().width;
+
+  showPixelImages(int pixel) async {
+    pixelWidthCount = pixel - 1;
+    await _getPixelImage(pixelWidthCount);
+    update();
   }
 
-  _getPixelImage() async {
+  _getPixelImage(int pixel) async {
     lib.Image image = _getImageFromFile();
 
     int? width = image.width;
@@ -50,19 +52,19 @@ class PickerViewModel extends GetxController {
 
     Log.i('image size: $width x $height');
 
-    pixelWidthCount = int.parse(pixelInputController.text);
-    pixelHeightCount = (pixelWidthCount * (height / width)).toInt();
+    pixelHeightCount = (pixel * (height / width)).toInt();
 
-    int chunk = width ~/ (pixelWidthCount + 1);
+    int chunk = width ~/ (pixel + 1);
 
     colors.clear();
+    imageSizeString = 'width: $pixel, height: $pixelHeightCount';
 
-    Log.i('width: $pixelWidthCount, height: $pixelHeightCount, pixel chunk: $chunk');
+    Log.i('$imageSizeString, pixel chunk: $chunk');
 
     for (int y = 1; y < pixelHeightCount + 1; y++) {
-      for (int x = 1; x < pixelWidthCount + 1; x++) {
-        int pixel = image.getPixel(x * chunk, y * chunk);
-        colors.add(abgrToColor(pixel));
+      for (int x = 1; x < pixel + 1; x++) {
+        int p = image.getPixel(x * chunk, y * chunk);
+        colors.add(_abgrToColor(p));
       }
     }
   }
@@ -83,37 +85,10 @@ class PickerViewModel extends GetxController {
     }
   }
 
-  Color abgrToColor(int argbColor) {
+  Color _abgrToColor(int argbColor) {
     int r = (argbColor >> 16) & 0xFF;
     int b = (argbColor & 0xFF) << 16;
     int g = argbColor & 0xFF00FF00;
     return Color(r | g | b);
-  }
-
-  Future<void> _changeShowStateAfter500milliseconds() async {
-    await Future.delayed(const Duration(milliseconds: 500), () {
-      update();
-    });
-  }
-
-  getColorInfo(int index) {
-    selectedIndex = index;
-    selectedColor = colors[index];
-
-    colorInfo = 'R: ${hex(selectedColor.red)},'
-        ' G: ${hex(selectedColor.green)},'
-        ' B: ${hex(selectedColor.blue)},'
-        ' A: ${hex(selectedColor.alpha)}';
-    update();
-  }
-
-  isSelectedIndex(int index) => index == selectedIndex;
-
-  void Function(String numberString) setPixelCount() {
-    return (String numberString) {
-      int pixel = int.parse(numberString);
-      pixelWidthCount = pixel;
-      update();
-    };
   }
 }

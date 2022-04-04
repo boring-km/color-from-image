@@ -45,9 +45,9 @@ class PickerView extends GetView<PickerViewModel> {
                     ),
                   ),
                   Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.topRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
+                      padding: const EdgeInsets.only(top: 8, right: 4),
                       child: Container(
                         decoration: const BoxDecoration(
                           color: Colors.white,
@@ -72,27 +72,24 @@ class PickerView extends GetView<PickerViewModel> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
-                              height: 24,
-                              child: TextField(
-                                controller: controller.pixelInputController,
-                                keyboardType: TextInputType.number,
-                                onSubmitted: controller.setPixelCount(),
-                                decoration: const InputDecoration(
-                                  border: UnderlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(4),
+                              height: 64,
+                              child: ListView.builder(
+                                padding: const EdgeInsets.all(0),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: controller.pixelWidthList.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        controller.showPixelImages(controller.pixelWidthList[index]);
+                                      },
+                                      child: Text((controller.pixelWidthList[index] - 1).toString()),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
                             ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => controller.showPixelImages(),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.black,
-                            ),
-                            child: const Text('픽셀 입력'),
                           ),
                         ],
                       ),

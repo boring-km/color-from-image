@@ -44,35 +44,33 @@ class _PixelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double width = 0;
     double screenWidth = Get.context?.size?.width ?? 390.0;
     double screenHeight = Get.context?.size?.height ?? 800.0;
+    double size = screenWidth / xCount - 1;
 
     double ratio = xCount / screenWidth;
     double chunk = ratio > 1 ? 1 / ratio : ratio;
     Log.d('증가 단위: $chunk');
 
     while (true) {
-      width += 0.00001;
-      if (width * xCount > screenWidth || width * yCount > screenHeight) {
-        width -= 0.00001;
+      size += 0.0000001;
+      if (size * xCount > screenWidth || size * yCount > screenHeight) {
+        size -= 0.0000001;
         break;
       }
     }
 
-    Log.d('width: $width, chunk: $chunk, ratio: $ratio, xCount: $xCount, yCount: $yCount, screen width: $screenWidth');
-
-
+    Log.d('width: $size, chunk: $chunk, xCount: $xCount, yCount: $yCount, screen width: $screenWidth');
 
     for (int y = 0; y < yCount; y++) {
       for (int x = 0; x < xCount; x++) {
+        var cur = y * xCount + x;
         final paint = Paint()
-          ..color = colors[y * xCount + x]
+          ..color = colors[cur]
           ..style = PaintingStyle.fill;
 
-        final size = width / 2;
-        final rect = Rect.fromLTRB(x.toDouble() * width - size, y.toDouble() * width - size,
-            x.toDouble() * width + size, y.toDouble() * width + size);
+        final rect = Rect.fromLTRB(x.toDouble() * size - size, y.toDouble() * size - size,
+            x.toDouble() * size + size, y.toDouble() * size + size);
         canvas.drawRect(rect, paint);
       }
     }
