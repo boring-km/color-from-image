@@ -4,7 +4,7 @@ class GetDivisors {
     final result = <int>[];
     for (var i = 3; i <= mid; i++) {
       if (num % i == 0) {
-        result.add(i-1);
+        result.add(i - 1);
       }
     }
     return result;

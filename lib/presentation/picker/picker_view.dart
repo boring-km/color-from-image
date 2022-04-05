@@ -38,8 +38,8 @@ class PickerView extends GetView<PickerViewModel> {
                       builder: (controller) {
                         return ImagePainter(
                           colors: controller.colors,
-                          xCount: controller.pixelWidthCount,
-                          yCount: controller.pixelHeightCount,
+                          xCount: controller.pixelWidth,
+                          yCount: controller.pixelHeight,
                         );
                       },
                     ),
@@ -82,7 +82,7 @@ class PickerView extends GetView<PickerViewModel> {
                                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        controller.showPixelImages(controller.pixelWidthList[index]);
+                                        controller.showPixels(controller.pixelWidthList[index]);
                                       },
                                       child: Text((controller.pixelWidthList[index] - 1).toString()),
                                     ),
