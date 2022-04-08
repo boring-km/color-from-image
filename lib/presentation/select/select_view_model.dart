@@ -16,6 +16,7 @@ class SelectViewModel extends GetxController {
   }
 
   void moveToPickerView(String imagePath) {
+    if (imagePath.isEmpty) return;
     Get.toNamed('/picker', arguments: {
       'path': imagePath,
     });

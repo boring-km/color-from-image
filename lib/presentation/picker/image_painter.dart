@@ -18,7 +18,8 @@ class ImagePainter extends StatefulWidget {
   State<ImagePainter> createState() => _ImagePainterState();
 }
 
-class _ImagePainterState extends State<ImagePainter> with SingleTickerProviderStateMixin {
+class _ImagePainterState extends State<ImagePainter> {
+
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
@@ -44,18 +45,22 @@ class _PixelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+
+    if (colors.isEmpty) {
+      return;
+    }
+
     double screenWidth = Get.context?.size?.width ?? 390.0;
     double screenHeight = Get.context?.size?.height ?? 800.0;
     double size = screenWidth / xCount - 1;
 
     double ratio = xCount / screenWidth;
     double chunk = ratio > 1 ? 1 / ratio : ratio;
-    Log.d('증가 단위: $chunk');
 
     while (true) {
-      size += 0.0000001;
+      size += 0.00001;
       if (size * xCount > screenWidth || size * yCount > screenHeight) {
-        size -= 0.0000001;
+        size -= 0.00001;
         break;
       }
     }
@@ -69,7 +74,7 @@ class _PixelPainter extends CustomPainter {
           ..color = colors[cur]
           ..style = PaintingStyle.fill;
 
-        final rect = Rect.fromLTRB(x.toDouble() * size - size, y.toDouble() * size - size,
+        final rect = Rect.fromLTRB(x.toDouble() * size, y.toDouble() * size,
             x.toDouble() * size + size, y.toDouble() * size + size);
         canvas.drawRect(rect, paint);
       }
@@ -78,6 +83,6 @@ class _PixelPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_PixelPainter oldPainter) {
-    return oldPainter.xCount != xCount || oldPainter.yCount != yCount;
+    return false;
   }
 }

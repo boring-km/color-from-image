@@ -6,32 +6,31 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as lib;
 
 class ImageUseCase {
-  static lib.Image getImageFrom(File originalFile) {
-    Uint8List bytes = _getImageBytes(originalFile);
+  static Future<lib.Image> getImageFrom(File originalFile) async {
+    Uint8List bytes = await _getImageBytes(originalFile);
     List<int> values = bytes.buffer.asUint8List();
     final lib.Image image = lib.decodeImage(values)!;
     return image;
   }
 
-  static Uint8List _getImageBytes(File file) {
-    if (file.existsSync()) {
-      var imageBytes = file.readAsBytesSync();
+  static Future<Uint8List> _getImageBytes(File file) async {
+    if (await file.exists()) {
+      var imageBytes = await file.readAsBytes();
       return imageBytes;
     } else {
       return Uint8List(0);
     }
   }
 
-  static Future<List<Color>> getPixelImage(int pixel, File originalFile) async {
-    var image = getImageFrom(originalFile);
+  static List<Color> getPixelImage(lib.Image image, int pixel, File originalFile) {
     var width = image.width;
-    var pixelHeight = getHeight(pixel, originalFile);
+    var pixelHeight = getHeight(image, pixel, originalFile);
 
     final colors = <Color>[];
     final chunk = width ~/ (pixel + 1);
 
-    for (int y = 1; y < pixelHeight + 1; y++) {
-      for (int x = 1; x < pixel + 1; x++) {
+    for (int y = 0; y < pixelHeight; y++) {
+      for (int x = 0; x < pixel; x++) {
         int p = image.getPixel(x * chunk, y * chunk);
         colors.add(abgrToColor(p));
       }
@@ -39,13 +38,7 @@ class ImageUseCase {
     return colors;
   }
 
-  static getImageSizeString(int pixel, File originalFile) {
-    final image = getImageFrom(originalFile);
-    return 'width: $pixel, height: ${(pixel * (image.height / image.width)).toInt()}';
-  }
-
-  static int getHeight(int pixel, File originalFile) {
-    final image = getImageFrom(originalFile);
+  static int getHeight(lib.Image image, int pixel, File originalFile) {
     return (pixel * (image.height / image.width)).toInt();
   }
 

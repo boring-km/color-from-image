@@ -9,57 +9,35 @@ class PickerView extends GetView<PickerViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          leading: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              width: 40,
-              height: 40,
-              color: Colors.transparent,
-              child: const Icon(CupertinoIcons.back),
+    return GetBuilder<PickerViewModel>(
+      builder: (controller) {
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              leading: GestureDetector(
+                onTap: () => Get.back(),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  color: Colors.transparent,
+                  child: const Icon(CupertinoIcons.back),
+                ),
+              ),
+              title: const Text('Color Extractor'),
             ),
-          ),
-          title: const Text('Color Extractor'),
-        ),
-        body: SafeArea(
-          child: Center(
-            child: GetBuilder<PickerViewModel>(builder: (controller) {
-              return Stack(
+            body: SafeArea(
+              child: Stack(
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: GetBuilder<PickerViewModel>(
-                      builder: (controller) {
-                        return ImagePainter(
-                          colors: controller.colors,
-                          xCount: controller.pixelWidth,
-                          yCount: controller.pixelHeight,
-                        );
-                      },
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8, right: 4),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(controller.imageSizeString),
-                        ),
-                      ),
+                    child: ImagePainter(
+                      colors: controller.colors,
+                      xCount: controller.pixelWidth,
+                      yCount: controller.pixelHeight,
                     ),
                   ),
                   Align(
@@ -73,21 +51,18 @@ class PickerView extends GetView<PickerViewModel> {
                             padding: const EdgeInsets.all(8.0),
                             child: SizedBox(
                               height: 64,
-                              child: ListView.builder(
-                                padding: const EdgeInsets.all(0),
-                                scrollDirection: Axis.horizontal,
-                                itemCount: controller.pixelWidthList.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        controller.showPixels(controller.pixelWidthList[index]);
-                                      },
-                                      child: Text((controller.pixelWidthList[index] - 1).toString()),
-                                    ),
-                                  );
-                                },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: controller.showBefore,
+                                    child: Text(controller.hasBefore() ? '이전' : '시작'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: controller.showNext,
+                                    child: Text(controller.hasNext() ? '다음' : '끝'),
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -96,11 +71,11 @@ class PickerView extends GetView<PickerViewModel> {
                     ),
                   )
                 ],
-              );
-            }),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
