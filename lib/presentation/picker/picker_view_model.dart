@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:color_picker/core/logger.dart';
 import 'package:color_picker/data/get_divisors.dart';
 import 'package:color_picker/data/image_use_case.dart';
+import 'package:color_picker/presentation/picker/image_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -71,29 +72,20 @@ class PickerViewModel extends GetxController {
       };
 
   get savePicture => () async {
+    ui.PictureRecorder recorder = ui.PictureRecorder();
+    var size = saveKey.currentContext?.size;
+    Canvas canvas = Canvas(recorder);
+    var painter = PixelPainter(colors: colors, xCount: pixelWidth, yCount: pixelHeight);
+    painter.paint(canvas, size!);
 
-    Future.delayed(const Duration(milliseconds: 300), () async {
-      RenderRepaintBoundary? boundary = saveKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) {
-        return;
-      }
-      ui.Image image = await boundary.toImage();
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List? pngBytes = byteData?.buffer.asUint8List();
+    ui.Image rendered = await recorder.endRecording().toImage(size.width.floor(), size.height.floor());
+    var pngBytes = await rendered.toByteData(format: ui.ImageByteFormat.png) ?? ByteData(0);
 
-      //Request permissions if not already granted
-      if (!(await Permission.storage.status.isGranted)) {
-        await Permission.storage.request();
-      } else {
-        Log.d("save granted");
-      }
+    final result = await ImageGallerySaver.saveImage(
+        Uint8List.fromList(pngBytes.buffer.asUint8List()),
+        quality: 100,
+        name: "pixel_image");
 
-      final result = await ImageGallerySaver.saveImage(
-          Uint8List.fromList(pngBytes!),
-          quality: 100,
-          name: "canvas_image");
-
-      Log.i(result);
-    });
+    Log.i(result);
   };
 }

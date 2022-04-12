@@ -23,7 +23,7 @@ class _ImagePainterState extends State<ImagePainter> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _PixelPainter(
+      painter: PixelPainter(
         colors: widget.colors,
         xCount: widget.xCount,
         yCount: widget.yCount,
@@ -32,12 +32,12 @@ class _ImagePainterState extends State<ImagePainter> {
   }
 }
 
-class _PixelPainter extends CustomPainter {
+class PixelPainter extends CustomPainter {
   final List<Color> colors;
   final int xCount;
   final int yCount;
 
-  _PixelPainter({
+  PixelPainter({
     required this.colors,
     required this.xCount,
     required this.yCount,
@@ -82,7 +82,7 @@ class _PixelPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_PixelPainter oldPainter) {
+  bool shouldRepaint(PixelPainter oldPainter) {
     return false;
   }
 }

@@ -32,19 +32,15 @@ class PickerView extends GetView<PickerViewModel> {
             body: SafeArea(
               child: Stack(
                 children: [
-                  RepaintBoundary(
-                    key: controller.saveKey,
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: ImagePainter(
-                            colors: controller.colors,
-                            xCount: controller.pixelWidth,
-                            yCount: controller.pixelHeight,
-                          ),
-                        ),
-                      ],
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      key: controller.saveKey,
+                      child: ImagePainter(
+                        colors: controller.colors,
+                        xCount: controller.pixelWidth,
+                        yCount: controller.pixelHeight,
+                      ),
                     ),
                   ),
                   Align(
