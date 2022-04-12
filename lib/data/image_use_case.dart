@@ -26,7 +26,7 @@ class ImageUseCase {
     var width = image.width;
     var pixelHeight = getHeight(image, pixel, originalFile);
 
-    final colors = <Color>[];
+    final List<Color> colors = <Color>[];
     final chunk = width ~/ (pixel + 1);
 
     for (int y = 0; y < pixelHeight; y++) {
