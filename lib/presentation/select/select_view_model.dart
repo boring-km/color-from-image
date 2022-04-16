@@ -1,3 +1,4 @@
+import 'package:color_picker/core/permissions.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -6,13 +7,17 @@ class SelectViewModel extends GetxController {
   final _imagePicker = Get.put(ImagePicker());
 
   showImageFromCamera() async {
-    String imagePath = await _getImagePath(ImageSource.camera);
-    moveToPickerView(imagePath);
+    if (await checkCameraPermission()) {
+      String imagePath = await _getImagePath(ImageSource.camera);
+      moveToPickerView(imagePath);
+    }
   }
 
   showImageFromGallery() async {
-    String imagePath = await _getImagePath(ImageSource.gallery);
-    moveToPickerView(imagePath);
+    if (await checkPhotosPermission()) {
+      String imagePath = await _getImagePath(ImageSource.gallery);
+      moveToPickerView(imagePath);
+    }
   }
 
   void moveToPickerView(String imagePath) {

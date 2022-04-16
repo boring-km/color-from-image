@@ -36,6 +36,7 @@ class PixelPainter extends CustomPainter {
   final List<Color> colors;
   final int xCount;
   final int yCount;
+  double pixel = 0;
 
   PixelPainter({
     required this.colors,
@@ -52,20 +53,20 @@ class PixelPainter extends CustomPainter {
 
     double screenWidth = Get.context?.size?.width ?? 390.0;
     double screenHeight = Get.context?.size?.height ?? 800.0;
-    double size = screenWidth / xCount - 1;
+    pixel = screenWidth / xCount - 1;
 
     double ratio = xCount / screenWidth;
     double chunk = ratio > 1 ? 1 / ratio : ratio;
 
     while (true) {
-      size += 0.00001;
-      if (size * xCount > screenWidth || size * yCount > screenHeight) {
-        size -= 0.00001;
+      pixel += 0.00001;
+      if (pixel * xCount > screenWidth || pixel * yCount > screenHeight) {
+        pixel -= 0.00001;
         break;
       }
     }
 
-    Log.d('width: $size, chunk: $chunk, xCount: $xCount, yCount: $yCount, screen width: $screenWidth');
+    Log.d('width: $pixel, chunk: $chunk, xCount: $xCount, yCount: $yCount, screen width: $screenWidth');
 
     for (int y = 0; y < yCount; y++) {
       for (int x = 0; x < xCount; x++) {
@@ -74,8 +75,8 @@ class PixelPainter extends CustomPainter {
           ..color = colors[cur]
           ..style = PaintingStyle.fill;
 
-        final rect = Rect.fromLTRB(x.toDouble() * size, y.toDouble() * size,
-            x.toDouble() * size + size, y.toDouble() * size + size);
+        final rect = Rect.fromLTRB(x.toDouble() * pixel, y.toDouble() * pixel,
+            x.toDouble() * pixel + pixel, y.toDouble() * pixel + pixel);
         canvas.drawRect(rect, paint);
       }
     }

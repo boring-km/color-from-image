@@ -34,13 +34,10 @@ class PickerView extends GetView<PickerViewModel> {
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Container(
-                      key: controller.saveKey,
-                      child: ImagePainter(
-                        colors: controller.colors,
-                        xCount: controller.pixelWidth,
-                        yCount: controller.pixelHeight,
-                      ),
+                    child: ImagePainter(
+                      colors: controller.colors,
+                      xCount: controller.pixelWidth,
+                      yCount: controller.pixelHeight,
                     ),
                   ),
                   Align(
@@ -59,15 +56,15 @@ class PickerView extends GetView<PickerViewModel> {
                                 children: [
                                   ElevatedButton(
                                     onPressed: controller.showBefore,
-                                    child: Text(controller.hasBefore() ? '이전' : '시작'),
+                                    child: Text(controller.hasBeforeString()),
                                   ),
                                   ElevatedButton(
                                     onPressed: controller.savePicture,
-                                    child: Text('저장'),
+                                    child: const Text('저장'),
                                   ),
                                   ElevatedButton(
                                     onPressed: controller.showNext,
-                                    child: Text(controller.hasNext() ? '다음' : '끝'),
+                                    child: Text(controller.hasNextString()),
                                   )
                                 ],
                               ),
