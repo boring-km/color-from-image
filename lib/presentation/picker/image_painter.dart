@@ -1,4 +1,3 @@
-import 'package:color_picker/core/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,9 +54,6 @@ class PixelPainter extends CustomPainter {
     double screenHeight = Get.context?.size?.height ?? 800.0;
     pixel = screenWidth / xCount - 1;
 
-    double ratio = xCount / screenWidth;
-    double chunk = ratio > 1 ? 1 / ratio : ratio;
-
     while (true) {
       pixel += 0.00001;
       if (pixel * xCount > screenWidth || pixel * yCount > screenHeight) {
@@ -65,8 +61,6 @@ class PixelPainter extends CustomPainter {
         break;
       }
     }
-
-    Log.d('width: $pixel, chunk: $chunk, xCount: $xCount, yCount: $yCount, screen width: $screenWidth');
 
     for (int y = 0; y < yCount; y++) {
       for (int x = 0; x < xCount; x++) {

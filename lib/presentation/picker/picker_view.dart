@@ -29,6 +29,7 @@ class PickerView extends GetView<PickerViewModel> {
               ),
               title: const Text('Color Extractor'),
             ),
+            backgroundColor: Colors.black,
             body: SafeArea(
               child: Stack(
                 children: [
@@ -42,36 +43,41 @@ class PickerView extends GetView<PickerViewModel> {
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              height: 64,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: controller.showBefore,
-                                    child: Text(controller.hasBeforeString()),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: controller.savePicture,
-                                    child: const Text('저장'),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: controller.showNext,
-                                    child: Text(controller.hasNextString()),
-                                  )
-                                ],
-                              ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            height: 64,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: controller.showBefore,
+                                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                                  child: Text(controller.hasBeforeString(), style: const TextStyle(color: Colors.black),),
+                                ),
+                                ElevatedButton(
+                                  onPressed: controller.savePicture,
+                                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                                  child: const Text('저장', style: TextStyle(color: Colors.black),),
+                                ),
+                                ElevatedButton(
+                                  onPressed: controller.sharePicture,
+                                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                                  child: const Text('공유하기', style: TextStyle(color: Colors.black),),
+                                ),
+                                ElevatedButton(
+                                  onPressed: controller.showNext,
+                                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                                  child: Text(controller.hasNextString(), style: const TextStyle(color: Colors.black),),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   )
                 ],

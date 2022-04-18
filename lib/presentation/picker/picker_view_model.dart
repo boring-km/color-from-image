@@ -12,6 +12,8 @@ import 'package:image/image.dart' as lib;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'dart:ui' as ui;
 
+import 'package:share_plus/share_plus.dart';
+
 class PickerViewModel extends GetxController {
   List<Color> colors = <Color>[];
   List<int> _pixelWidthList = <int>[];
@@ -50,8 +52,11 @@ class PickerViewModel extends GetxController {
   }
 
   bool hasNext() => _pixelIndex + 1 < _pixelWidthList.length;
+
   bool hasBefore() => 2 < _pixelIndex;
+
   String hasNextString() => hasNext() ? '다음' : '끝';
+
   String hasBeforeString() => hasBefore() ? '이전' : '시작';
 
   get showNext => () {
@@ -66,24 +71,43 @@ class PickerViewModel extends GetxController {
         }
       };
 
-  get savePicture => () async {
-        var painter = PixelPainter(colors: colors, xCount: pixelWidth, yCount: pixelHeight);
-        double pixel = getPixelWidth(pixelWidth, pixelHeight);
-        Size size = Size(pixelWidth * pixel, pixelHeight * pixel);
-
-        ui.PictureRecorder recorder = ui.PictureRecorder();
-        Canvas canvas = Canvas(recorder);
-        painter.paint(canvas, size);
-
-        ui.Image rendered = await recorder.endRecording().toImage(size.width.floor(), size.height.floor());
-        var pngBytes = await rendered.toByteData(format: ui.ImageByteFormat.png) ?? ByteData(0);
-
-        final result = await ImageGallerySaver.saveImage(Uint8List.fromList(pngBytes.buffer.asUint8List()), quality: 100, name: "pixel_image");
-
-        Log.i(result);
+  Future<String> Function() get savePicture => () async {
+        ByteData pngBytes = await _getPixelImageBytes();
+        final result = (await ImageGallerySaver.saveImage(
+          Uint8List.fromList(pngBytes.buffer.asUint8List()),
+          quality: 100,
+          name: "pixel_image",
+          isReturnImagePathOfIOS: true,
+        )) as Map;
+        if (result['isSuccess']) {
+          Log.i('filePath: ${result['filePath']}');
+          return result['filePath'] as String;
+        } else {
+          return '';
+        }
       };
 
-  double getPixelWidth(int xCount, int yCount) {
+  Future<ByteData> _getPixelImageBytes() async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final size = _getPixelImageSize(pixelWidth, pixelHeight);
+    _drawPixels(canvas, size);
+
+    final rendered = await recorder.endRecording().toImage(size.width.floor(), size.height.floor());
+    return await rendered.toByteData(format: ui.ImageByteFormat.png) ?? ByteData(0);
+  }
+
+  void _drawPixels(Canvas canvas, Size size) {
+    final painter = PixelPainter(colors: colors, xCount: pixelWidth, yCount: pixelHeight);
+    painter.paint(canvas, size);
+  }
+
+  Size _getPixelImageSize(int xCount, int yCount) {
+    double pixel = _getPixelWidth(xCount, yCount);
+    return Size(pixelWidth * pixel, pixelHeight * pixel);
+  }
+
+  double _getPixelWidth(int xCount, int yCount) {
     double screenWidth = Get.context?.size?.width ?? 390.0;
     double screenHeight = Get.context?.size?.height ?? 800.0;
     var pixel = screenWidth / xCount - 1;
@@ -96,4 +120,16 @@ class PickerViewModel extends GetxController {
     }
     return pixel;
   }
+
+  void sharePicture() async {
+    var savePath = await _getImageFilePath();
+    if (await File(savePath).exists()) {
+      Share.shareFiles([savePath], subject: 'Share Your Pixel Image');
+      File(savePath).delete();  // 저장 버튼이 있기 때문에 공유 시 임시로 저장했던 파일은 지워준다.
+    } else {
+      Log.e('is not exists');
+    }
+  }
+
+  Future<String> _getImageFilePath() async => (await savePicture()).replaceAll('file://', '');
 }
