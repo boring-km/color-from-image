@@ -16,6 +16,14 @@ Future<bool> checkCameraPermission() async {
   return true;
 }
 
+Future<bool> checkStoragePermission() async {
+  if (!await Permission.storage.isGranted) {
+    final res = await Permission.storage.request();
+    return await _processGranted(res);
+  }
+  return true;
+}
+
 Future<bool> _processGranted(PermissionStatus res) async {
   if (!res.isGranted) {
     if (res.isPermanentlyDenied) {

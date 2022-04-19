@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:color_picker/core/logger.dart';
+import 'package:color_picker/core/permissions.dart';
 import 'package:color_picker/data/get_divisors.dart';
 import 'package:color_picker/data/image_use_case.dart';
 import 'package:color_picker/presentation/picker/image_painter.dart';
@@ -72,16 +73,24 @@ class PickerViewModel extends GetxController {
       };
 
   Future<String> Function() get savePicture => () async {
-        ByteData pngBytes = await _getPixelImageBytes();
-        final result = (await ImageGallerySaver.saveImage(
-          Uint8List.fromList(pngBytes.buffer.asUint8List()),
-          quality: 100,
-          name: "pixel_image",
-          isReturnImagePathOfIOS: true,
-        )) as Map;
-        if (result['isSuccess']) {
-          Log.i('filePath: ${result['filePath']}');
-          return result['filePath'] as String;
+        final hasPermission = await checkStoragePermission();
+        if (hasPermission) {
+          ByteData pngBytes = await _getPixelImageBytes();
+          final result = (await ImageGallerySaver.saveImage(
+            Uint8List.fromList(pngBytes.buffer.asUint8List()),
+            quality: 100,
+            name: "pixel_image",
+            isReturnImagePathOfIOS: true,
+          )) as Map;
+          /* TODO
+               android에서 현재 MediaStore.Images.Media.EXTERNAL_CONTENT_URI 경로로 이미지를 사용하고 있어서
+               해당 경로를 사용할 수 있어야 한다. */
+          if (result['isSuccess']) {
+            Log.i('filePath: ${result['filePath']}');
+            return result['filePath'] as String;
+          } else {
+            return '';
+          }
         } else {
           return '';
         }
@@ -125,11 +134,11 @@ class PickerViewModel extends GetxController {
     var savePath = await _getImageFilePath();
     if (await File(savePath).exists()) {
       Share.shareFiles([savePath], subject: 'Share Your Pixel Image');
-      File(savePath).delete();  // 저장 버튼이 있기 때문에 공유 시 임시로 저장했던 파일은 지워준다.
+      File(savePath).delete(); // 저장 버튼이 있기 때문에 공유 시 임시로 저장했던 파일은 지워준다.
     } else {
       Log.e('is not exists');
     }
   }
 
-  Future<String> _getImageFilePath() async => (await savePicture()).replaceAll('file://', '');
+  Future<String> _getImageFilePath() async => (await savePicture()).replaceAll('file://', '').replaceAll('content://', '/');
 }
