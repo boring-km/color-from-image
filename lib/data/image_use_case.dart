@@ -22,9 +22,9 @@ class ImageUseCase {
     }
   }
 
-  static List<Color> getPixelImage(lib.Image image, int pixel, File originalFile) {
+  static List<Color> getPixelImage(lib.Image image, int pixel) {
     var width = image.width;
-    var pixelHeight = getHeight(image, pixel, originalFile);
+    var pixelHeight = getHeight(image, pixel);
 
     final List<Color> colors = <Color>[];
     final chunk = width ~/ (pixel + 1);
@@ -38,7 +38,7 @@ class ImageUseCase {
     return colors;
   }
 
-  static int getHeight(lib.Image image, int pixel, File originalFile) {
+  static int getHeight(lib.Image image, int pixel) {
     return (pixel * (image.height / image.width)).toInt();
   }
 

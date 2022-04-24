@@ -45,8 +45,8 @@ class PickerViewModel extends GetxController {
   showPixels(int selectedPixel) async {
     pixelWidth = selectedPixel - 1;
     final lib.Image img = await image;
-    colors = ImageUseCase.getPixelImage(img, pixelWidth, _imageFile);
-    pixelHeight = ImageUseCase.getHeight(img, pixelWidth, _imageFile);
+    colors = ImageUseCase.getPixelImage(img, pixelWidth);
+    pixelHeight = ImageUseCase.getHeight(img, pixelWidth);
     Future.delayed(const Duration(milliseconds: 300), () => update());
   }
 
