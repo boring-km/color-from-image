@@ -31,17 +31,15 @@ class PickerViewModel extends GetxController {
     super.onInit();
     Future.microtask(() async {
       image = ImageUseCase.getImageFrom(_imageFile);
-      pixelWidth = _initialPixelWidth(await image);
+      pixelWidth = _initializeWidth(await image);
       showPixels(pixelWidth);
     });
   }
 
-  int _initialPixelWidth(lib.Image image) => _setImageWidth(image) + 1;
-
-  int _setImageWidth(lib.Image image) {
+  int _initializeWidth(lib.Image image) {
     int imageWidth = image.width;
     _pixelWidthList = GetDivisors.by(imageWidth);
-    return _pixelWidthList[_pixelIndex];
+    return _pixelWidthList[_pixelIndex] + 1;
   }
 
   showPixels(int selectedPixel) async {
