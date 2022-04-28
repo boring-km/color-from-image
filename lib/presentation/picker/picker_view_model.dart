@@ -11,6 +11,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as lib;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
 
 import 'package:share_plus/share_plus.dart';
@@ -70,29 +71,38 @@ class PickerViewModel extends GetxController {
         }
       };
 
-  Future<String> Function() get savePicture => () async {
+  get savePicture => () async {
         final hasPermission = await checkStoragePermission();
         if (hasPermission) {
           ByteData pngBytes = await _getPixelImageBytes();
-          final result = (await ImageGallerySaver.saveImage(
+          await ImageGallerySaver.saveImage(
             Uint8List.fromList(pngBytes.buffer.asUint8List()),
             quality: 100,
             name: "pixel_image",
             isReturnImagePathOfIOS: true,
-          )) as Map;
-          /* TODO
-               android에서 현재 MediaStore.Images.Media.EXTERNAL_CONTENT_URI 경로로 이미지를 사용하고 있어서
-               해당 경로를 사용할 수 있어야 한다. */
-          if (result['isSuccess']) {
-            Log.i('filePath: ${result['filePath']}');
-            return result['filePath'] as String;
-          } else {
-            return '';
-          }
-        } else {
-          return '';
+          );
         }
       };
+
+  Future<String> getShareFilePath() async {
+    final hasPermission = await checkStoragePermission();
+    Log.i('hasPermission: $hasPermission');
+    if (hasPermission) {
+      ByteData pngBytes = await _getPixelImageBytes();
+      final Uint8List bytes = Uint8List.fromList(pngBytes.buffer.asUint8List());
+      final dir = await getApplicationDocumentsDirectory();
+      final filePath = dir.path + '/pixel_temp.jpg';
+      final file = File(filePath);
+      if (await file.exists()) {
+        await file.delete();
+      }
+      await file.writeAsBytes(bytes);
+      Log.i(filePath);
+      return filePath;
+    } else {
+      return '';
+    }
+  }
 
   Future<ByteData> _getPixelImageBytes() async {
     final recorder = ui.PictureRecorder();
@@ -129,14 +139,13 @@ class PickerViewModel extends GetxController {
   }
 
   void sharePicture() async {
-    var savePath = await _getImageFilePath();
+    final savePath = (await getShareFilePath()).replaceAll('file://', '');
     if (await File(savePath).exists()) {
-      Share.shareFiles([savePath], subject: 'Share Your Pixel Image');
-      File(savePath).delete(); // 저장 버튼이 있기 때문에 공유 시 임시로 저장했던 파일은 지워준다.
+      Log.i('is exists');
+      await Share.shareFiles([savePath], subject: 'Share Your Pixel Image');
+      await File(savePath).delete();
     } else {
       Log.e('is not exists');
     }
   }
-
-  Future<String> _getImageFilePath() async => (await savePicture()).replaceAll('file://', '').replaceAll('content://', '/');
 }
