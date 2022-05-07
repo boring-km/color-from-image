@@ -27,7 +27,7 @@ class PickerView extends GetView<PickerViewModel> {
                   child: const Icon(CupertinoIcons.back),
                 ),
               ),
-              title: const Text('Color Extractor'),
+              title: const Text('Show Pixels'),
             ),
             backgroundColor: Colors.black,
             body: SafeArea(
@@ -61,12 +61,12 @@ class PickerView extends GetView<PickerViewModel> {
                                 ElevatedButton(
                                   onPressed: controller.savePicture,
                                   style: ElevatedButton.styleFrom(primary: Colors.white),
-                                  child: const Text('저장', style: TextStyle(color: Colors.black),),
+                                  child: const Text('Save', style: TextStyle(color: Colors.black),),
                                 ),
                                 ElevatedButton(
                                   onPressed: controller.sharePicture,
                                   style: ElevatedButton.styleFrom(primary: Colors.white),
-                                  child: const Text('공유하기', style: TextStyle(color: Colors.black),),
+                                  child: const Text('Share', style: TextStyle(color: Colors.black),),
                                 ),
                                 ElevatedButton(
                                   onPressed: controller.showNext,

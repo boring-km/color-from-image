@@ -6,6 +6,7 @@ import 'package:color_picker/core/permissions.dart';
 import 'package:color_picker/data/get_divisors.dart';
 import 'package:color_picker/data/image_use_case.dart';
 import 'package:color_picker/presentation/picker/image_painter.dart';
+import 'package:color_picker/ui/show_simple_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -55,9 +56,9 @@ class PickerViewModel extends GetxController {
 
   bool hasBefore() => 2 < _pixelIndex;
 
-  String hasNextString() => hasNext() ? '다음' : '끝';
+  String hasNextString() => hasNext() ? 'Next' : 'Last';
 
-  String hasBeforeString() => hasBefore() ? '이전' : '시작';
+  String hasBeforeString() => hasBefore() ? 'Prev' : 'First';
 
   get showNext => () {
         if (hasNext()) {
@@ -81,6 +82,7 @@ class PickerViewModel extends GetxController {
             name: "pixel_image",
             isReturnImagePathOfIOS: true,
           );
+          showSimpleAlert('Image Saved!');
         }
       };
 

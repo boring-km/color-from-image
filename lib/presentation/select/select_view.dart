@@ -12,7 +12,7 @@ class SelectView extends GetView<SelectViewModel> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Color Extractor'),
+        title: const Text('Show Pixels'),
       ),
       body: SafeArea(
         child: Center(
@@ -35,7 +35,7 @@ class SelectView extends GetView<SelectViewModel> {
                       ),
                     ),
                     Text(
-                      '촬영하기',
+                      'Camera',
                       style: Theme.of(context).textTheme.headline5,
                     ),
                   ],
@@ -63,7 +63,7 @@ class SelectView extends GetView<SelectViewModel> {
                       ),
                     ),
                     Text(
-                      '불러오기',
+                      'Photos',
                       style: Theme.of(context).textTheme.headline5,
                     ),
                   ],
@@ -76,11 +76,3 @@ class SelectView extends GetView<SelectViewModel> {
     );
   }
 }
-
-/*
-
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
- */
