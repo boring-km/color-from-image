@@ -52,7 +52,11 @@ class PixelPainter extends CustomPainter {
 
     double screenWidth = Get.context?.size?.width ?? 390.0;
     double screenHeight = Get.context?.size?.height ?? 800.0;
-    pixel = screenWidth / xCount - 1;
+    if (screenWidth < screenHeight) {
+      pixel = screenWidth / xCount - 1;
+    } else {
+      pixel = screenHeight / yCount - 1;
+    }
 
     while (true) {
       pixel += 0.00001;
