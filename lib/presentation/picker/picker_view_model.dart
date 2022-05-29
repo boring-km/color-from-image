@@ -34,7 +34,7 @@ class PickerViewModel extends GetxController {
     Future.microtask(() async {
       image = ImageUseCase.getImageFrom(_imageFile);
       pixelWidth = _initializeWidth(await image);
-      showPixels(pixelWidth);
+      _showPixels(pixelWidth);
     });
   }
 
@@ -44,7 +44,7 @@ class PickerViewModel extends GetxController {
     return _pixelWidthList[_pixelIndex] + 1;
   }
 
-  showPixels(int selectedPixel) async {
+  _showPixels(int selectedPixel) async {
     pixelWidth = selectedPixel - 1;
     final lib.Image img = await image;
     colors = ImageUseCase.getPixelImage(img, pixelWidth);
@@ -62,13 +62,13 @@ class PickerViewModel extends GetxController {
 
   get showNext => () {
         if (hasNext()) {
-          showPixels(_pixelWidthList[++_pixelIndex]);
+          _showPixels(_pixelWidthList[++_pixelIndex]);
         }
       };
 
   get showBefore => () {
         if (hasBefore()) {
-          showPixels(_pixelWidthList[--_pixelIndex]);
+          _showPixels(_pixelWidthList[--_pixelIndex]);
         }
       };
 
@@ -93,7 +93,7 @@ class PickerViewModel extends GetxController {
       ByteData pngBytes = await _getPixelImageBytes();
       final Uint8List bytes = Uint8List.fromList(pngBytes.buffer.asUint8List());
       final dir = await getApplicationDocumentsDirectory();
-      final filePath = dir.path + '/pixel_temp.jpg';
+      final filePath = '${dir.path}/pixel_temp.jpg';
       final file = File(filePath);
       if (await file.exists()) {
         await file.delete();

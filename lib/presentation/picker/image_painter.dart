@@ -1,3 +1,4 @@
+import 'package:color_picker/core/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -65,6 +66,9 @@ class PixelPainter extends CustomPainter {
         break;
       }
     }
+
+    Log.i("xCount: $xCount, yCount: $yCount");
+    Log.i("pixel: $pixel, screenWidth: $screenWidth, screenHeight: $screenHeight");
 
     for (int y = 0; y < yCount; y++) {
       for (int x = 0; x < xCount; x++) {
