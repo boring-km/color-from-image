@@ -1,13 +1,21 @@
+import 'dart:collection';
+
 class GetDivisors {
+  static const limitPixelSize = 500;
+  static const minimumPixelLevel = 8;
+
   static List<int> by(int num) {
     final mid = num / 2;
-    final result = <int>[];
+    final tempSet = HashSet<int>();
     for (var i = 3; i <= mid; i++) {
-      if (num % i == 0 && i < 500) {
-        result.add(i - 1);
+      if (num % i == 0 && i < limitPixelSize) {
+        tempSet.add(i - 1);
       }
     }
 
-    return result;
+    if (tempSet.length < minimumPixelLevel) {
+      tempSet.addAll(by(num - 1));
+    }
+    return <int>[...tempSet]..sort();
   }
 }
