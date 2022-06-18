@@ -1,21 +1,15 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:color_picker/core/logger.dart';
-import 'package:color_picker/core/permissions.dart';
 import 'package:color_picker/data/get_divisors.dart';
 import 'package:color_picker/data/image_use_case.dart';
-import 'package:color_picker/presentation/picker/image_painter.dart';
+import 'package:color_picker/data/save_use_case.dart';
+import 'package:color_picker/data/share_use_case.dart';
 import 'package:color_picker/ui/show_simple_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as lib;
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:ui' as ui;
-
-import 'package:share_plus/share_plus.dart';
 
 class PickerViewModel extends GetxController {
   List<Color> colors = <Color>[];
@@ -73,81 +67,13 @@ class PickerViewModel extends GetxController {
       };
 
   get savePicture => () async {
-        final hasPermission = await checkStoragePermission();
-        if (hasPermission) {
-          ByteData pngBytes = await _getPixelImageBytes();
-          await ImageGallerySaver.saveImage(
-            Uint8List.fromList(pngBytes.buffer.asUint8List()),
-            quality: 100,
-            name: "pixel_image",
-            isReturnImagePathOfIOS: true,
-          );
-          showSimpleAlert('Image Saved!');
-        }
+        ByteData pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
+        String resultMessage = await SaveUseCase.save(pngBytes);
+        showSimpleAlert(resultMessage);
       };
 
-  Future<String> getShareFilePath() async {
-    final hasPermission = await checkStoragePermission();
-    Log.i('hasPermission: $hasPermission');
-    if (hasPermission) {
-      ByteData pngBytes = await _getPixelImageBytes();
-      final Uint8List bytes = Uint8List.fromList(pngBytes.buffer.asUint8List());
-      final dir = await getApplicationDocumentsDirectory();
-      final filePath = '${dir.path}/pixel_temp.jpg';
-      final file = File(filePath);
-      if (await file.exists()) {
-        await file.delete();
-      }
-      await file.writeAsBytes(bytes);
-      Log.i(filePath);
-      return filePath;
-    } else {
-      return '';
-    }
-  }
-
-  Future<ByteData> _getPixelImageBytes() async {
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    final size = _getPixelImageSize(pixelWidth, pixelHeight);
-    _drawPixels(canvas, size);
-
-    final rendered = await recorder.endRecording().toImage(size.width.floor(), size.height.floor());
-    return await rendered.toByteData(format: ui.ImageByteFormat.png) ?? ByteData(0);
-  }
-
-  void _drawPixels(Canvas canvas, Size size) {
-    final painter = PixelPainter(colors: colors, xCount: pixelWidth, yCount: pixelHeight);
-    painter.paint(canvas, size);
-  }
-
-  Size _getPixelImageSize(int xCount, int yCount) {
-    double pixel = _getPixelWidth(xCount, yCount);
-    return Size(pixelWidth * pixel, pixelHeight * pixel);
-  }
-
-  double _getPixelWidth(int xCount, int yCount) {
-    double screenWidth = Get.context?.size?.width ?? 390.0;
-    double screenHeight = Get.context?.size?.height ?? 800.0;
-    var pixel = screenWidth / xCount - 1;
-    while (true) {
-      pixel += 0.00001;
-      if (pixel * xCount > screenWidth || pixel * yCount > screenHeight) {
-        pixel -= 0.00001;
-        break;
-      }
-    }
-    return pixel;
-  }
-
   void sharePicture() async {
-    final savePath = (await getShareFilePath()).replaceAll('file://', '');
-    if (await File(savePath).exists()) {
-      Log.i('is exists');
-      await Share.shareFiles([savePath], subject: 'Share Your Pixel Image');
-      await File(savePath).delete();
-    } else {
-      Log.e('is not exists');
-    }
+    ByteData pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
+    ShareUseCase.share(pngBytes);
   }
 }

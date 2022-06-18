@@ -1,8 +1,11 @@
 import 'dart:io';
-
 import 'dart:typed_data';
+import 'dart:ui' as ui;
+
+import 'package:color_picker/presentation/picker/image_painter.dart';
 import 'package:color_picker/ui/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image/image.dart' as lib;
 
 class ImageUseCase {
@@ -42,4 +45,37 @@ class ImageUseCase {
     return (pixel * (image.height / image.width)).toInt();
   }
 
+  static Future<ByteData> getPixelImageBytes(List<Color> colors, int xCount, int yCount) async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final size = _getPixelImageSize(xCount, yCount);
+    _drawPixels(colors, xCount, yCount, canvas, size);
+
+    final rendered = await recorder.endRecording().toImage(size.width.floor(), size.height.floor());
+    return await rendered.toByteData(format: ui.ImageByteFormat.png) ?? ByteData(0);
+  }
+
+  static void _drawPixels(List<Color> colors, int xCount, int yCount, Canvas canvas, Size size) {
+    final painter = PixelPainter(colors: colors, xCount: xCount, yCount: yCount);
+    painter.paint(canvas, size);
+  }
+
+  static Size _getPixelImageSize(int xCount, int yCount) {
+    double pixel = _getPixelWidth(xCount, yCount);
+    return Size(xCount * pixel, yCount * pixel);
+  }
+
+  static double _getPixelWidth(int xCount, int yCount) {
+    double screenWidth = Get.context?.size?.width ?? 390.0;
+    double screenHeight = Get.context?.size?.height ?? 800.0;
+    var pixel = screenWidth / xCount - 1;
+    while (true) {
+      pixel += 0.00001;
+      if (pixel * xCount > screenWidth || pixel * yCount > screenHeight) {
+        pixel -= 0.00001;
+        break;
+      }
+    }
+    return pixel;
+  }
 }
