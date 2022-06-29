@@ -11,7 +11,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as lib;
 
-class PickerViewModel extends GetxController {
+class PixelViewModel extends GetxController {
   List<Color> colors = <Color>[];
   List<int> _pixelWidthList = <int>[];
 

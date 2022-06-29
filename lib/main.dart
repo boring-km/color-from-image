@@ -1,5 +1,5 @@
 import 'package:color_picker/di/binding_setup.dart';
-import 'package:color_picker/presentation/picker/picker_view.dart';
+import 'package:color_picker/presentation/pixel/picker_view.dart';
 import 'package:color_picker/presentation/qr/qr_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/select',
       getPages: [
         GetPage(name: '/select', page: () => const SelectView(), binding: SelectViewBindings()),
-        GetPage(name: '/picker', page: () => const PickerView(), binding: PickerViewBindings()),
+        GetPage(name: '/pixel', page: () => const PixelView(), binding: PixelViewBindings()),
         GetPage(name: '/qrcode', page: () => const QrView()),
       ],
     );

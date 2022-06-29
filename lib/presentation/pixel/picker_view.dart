@@ -1,15 +1,15 @@
-import 'package:color_picker/presentation/picker/image_painter.dart';
-import 'package:color_picker/presentation/picker/picker_view_model.dart';
+import 'package:color_picker/presentation/pixel/picker_view_model.dart';
+import 'package:color_picker/ui/image_painter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PickerView extends GetView<PickerViewModel> {
-  const PickerView({Key? key}) : super(key: key);
+class PixelView extends GetView<PixelViewModel> {
+  const PixelView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<PickerViewModel>(
+    return GetBuilder<PixelViewModel>(
       builder: (controller) {
         return GestureDetector(
           onTap: () {
@@ -56,22 +56,34 @@ class PickerView extends GetView<PickerViewModel> {
                                 ElevatedButton(
                                   onPressed: controller.showBefore,
                                   style: ElevatedButton.styleFrom(primary: Colors.white),
-                                  child: Text(controller.hasBeforeString(), style: const TextStyle(color: Colors.black),),
+                                  child: Text(
+                                    controller.hasBeforeString(),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
                                 ),
                                 ElevatedButton(
                                   onPressed: controller.savePicture,
                                   style: ElevatedButton.styleFrom(primary: Colors.white),
-                                  child: const Text('Save', style: TextStyle(color: Colors.black),),
+                                  child: const Text(
+                                    'Save',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
                                 ElevatedButton(
                                   onPressed: controller.sharePicture,
                                   style: ElevatedButton.styleFrom(primary: Colors.white),
-                                  child: const Text('Share', style: TextStyle(color: Colors.black),),
+                                  child: const Text(
+                                    'Share',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
                                 ElevatedButton(
                                   onPressed: controller.showNext,
                                   style: ElevatedButton.styleFrom(primary: Colors.white),
-                                  child: Text(controller.hasNextString(), style: const TextStyle(color: Colors.black),),
+                                  child: Text(
+                                    controller.hasNextString(),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
                                 ),
                               ],
                             ),

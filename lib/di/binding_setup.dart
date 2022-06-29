@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '/presentation/select/select_view_model.dart';
-import '/presentation/picker/picker_view_model.dart';
+import '../presentation/pixel/picker_view_model.dart';
 
 class SelectViewBindings extends Bindings {
   @override
@@ -10,10 +10,9 @@ class SelectViewBindings extends Bindings {
   }
 }
 
-class PickerViewBindings extends Bindings {
+class PixelViewBindings extends Bindings {
   @override
   void dependencies() {
-    Get.put(PickerViewModel());
+    Get.put(PixelViewModel());
   }
-
 }
