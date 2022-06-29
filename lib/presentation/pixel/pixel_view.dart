@@ -33,9 +33,14 @@ class PixelView extends GetView<PixelViewModel> {
               child: Stack(
                 children: [
                   Center(
-                    child: Image.memory(
-                      controller.imageBytes,
-                      errorBuilder: (context, _, __) => const SizedBox.shrink(),
+                    child: InteractiveViewer(
+                      panEnabled: true, // Set it to false
+                      minScale: 1,
+                      maxScale: 4,
+                      child: Image.memory(
+                        controller.imageBytes,
+                        errorBuilder: (context, _, __) => const SizedBox.shrink(),
+                      ),
                     ),
                   ),
                   Align(

@@ -29,9 +29,9 @@ class PixelPainter extends CustomPainter {
     }
 
     while (true) {
-      pixel += 0.00001;
+      pixel += 0.01;
       if (pixel * xCount > screenWidth || pixel * yCount > screenHeight) {
-        pixel -= 0.00001;
+        pixel -= 0.01;
         break;
       }
     }
@@ -44,10 +44,12 @@ class PixelPainter extends CustomPainter {
         var cur = y * xCount + x;
         final paint = Paint()
           ..color = colors[cur]
-          ..strokeWidth = 0
           ..style = PaintingStyle.fill;
 
         final rect = Rect.fromLTRB(x.toDouble() * pixel, y.toDouble() * pixel, x.toDouble() * pixel + pixel, y.toDouble() * pixel + pixel);
+        canvas.drawRect(rect, paint);
+
+        paint.style = PaintingStyle.stroke;
         canvas.drawRect(rect, paint);
       }
     }

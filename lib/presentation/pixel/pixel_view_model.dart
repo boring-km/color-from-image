@@ -37,7 +37,7 @@ class PixelViewModel extends GetxController {
   int _initializeWidth(lib.Image image) {
     int imageWidth = image.width;
     _pixelWidthList = GetDivisors.by(imageWidth);
-    return _pixelWidthList[_pixelIndex] + 1;
+    return _pixelWidthList[_pixelIndex];
   }
 
   _showPixels(int selectedPixel) async {
