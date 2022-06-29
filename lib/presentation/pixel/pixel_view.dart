@@ -1,5 +1,4 @@
-import 'package:color_picker/presentation/pixel/picker_view_model.dart';
-import 'package:color_picker/ui/image_painter.dart';
+import 'package:color_picker/presentation/pixel/pixel_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,12 +32,10 @@ class PixelView extends GetView<PixelViewModel> {
             body: SafeArea(
               child: Stack(
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: ImagePainter(
-                      colors: controller.colors,
-                      xCount: controller.pixelWidth,
-                      yCount: controller.pixelHeight,
+                  Center(
+                    child: Image.memory(
+                      controller.imageBytes,
+                      errorBuilder: (context, _, __) => const SizedBox.shrink(),
                     ),
                   ),
                   Align(

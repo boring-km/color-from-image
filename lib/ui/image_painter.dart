@@ -2,36 +2,6 @@ import 'package:color_picker/core/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ImagePainter extends StatefulWidget {
-  final List<Color> colors;
-  final int xCount;
-  final int yCount;
-
-  const ImagePainter({
-    Key? key,
-    required this.colors,
-    required this.xCount,
-    required this.yCount,
-  }) : super(key: key);
-
-  @override
-  State<ImagePainter> createState() => _ImagePainterState();
-}
-
-class _ImagePainterState extends State<ImagePainter> {
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: PixelPainter(
-        colors: widget.colors,
-        xCount: widget.xCount,
-        yCount: widget.yCount,
-      ),
-    );
-  }
-}
-
 class PixelPainter extends CustomPainter {
   final List<Color> colors;
   final int xCount;
@@ -46,7 +16,6 @@ class PixelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-
     if (colors.isEmpty) {
       return;
     }
@@ -67,24 +36,25 @@ class PixelPainter extends CustomPainter {
       }
     }
 
-    Log.i("xCount: $xCount, yCount: $yCount");
-    Log.i("pixel: $pixel, screenWidth: $screenWidth, screenHeight: $screenHeight");
+    Log.d("xCount: $xCount, yCount: $yCount");
+    Log.d("pixel: $pixel, screenWidth: $screenWidth, screenHeight: $screenHeight");
 
     for (int y = 0; y < yCount; y++) {
       for (int x = 0; x < xCount; x++) {
         var cur = y * xCount + x;
         final paint = Paint()
           ..color = colors[cur]
+          ..strokeWidth = 0
           ..style = PaintingStyle.fill;
 
-        final rect = Rect.fromLTRB(x.toDouble() * pixel, y.toDouble() * pixel,
-            x.toDouble() * pixel + pixel, y.toDouble() * pixel + pixel);
+        final rect = Rect.fromLTRB(x.toDouble() * pixel, y.toDouble() * pixel, x.toDouble() * pixel + pixel, y.toDouble() * pixel + pixel);
         canvas.drawRect(rect, paint);
       }
     }
   }
 
   @override
+  // ignore: avoid_renaming_method_parameters
   bool shouldRepaint(PixelPainter oldPainter) {
     return false;
   }

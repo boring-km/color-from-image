@@ -1,5 +1,5 @@
 import 'package:color_picker/di/binding_setup.dart';
-import 'package:color_picker/presentation/pixel/picker_view.dart';
+import 'package:color_picker/presentation/pixel/pixel_view.dart';
 import 'package:color_picker/presentation/qr/qr_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

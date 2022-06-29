@@ -19,6 +19,8 @@ class PixelViewModel extends GetxController {
   int pixelHeight = 1;
   int _pixelIndex = 2;
 
+  Uint8List imageBytes = Uint8List(0);
+
   File get _imageFile => File(Get.arguments['path'] as String? ?? '');
   late Future<lib.Image> image;
 
@@ -43,6 +45,7 @@ class PixelViewModel extends GetxController {
     final lib.Image img = await image;
     colors = ImageUseCase.getPixelImage(img, pixelWidth);
     pixelHeight = ImageUseCase.getHeight(img, pixelWidth);
+    imageBytes = await getPicture();
     Future.delayed(const Duration(milliseconds: 300), () => update());
   }
 
@@ -75,5 +78,10 @@ class PixelViewModel extends GetxController {
   void sharePicture() async {
     ByteData pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
     ShareUseCase.share(pngBytes);
+  }
+
+  getPicture() async {
+    ByteData pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
+    return Uint8List.fromList(pngBytes.buffer.asUint8List());
   }
 }

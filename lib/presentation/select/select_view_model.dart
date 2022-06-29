@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SelectViewModel extends GetxController {
-
   final _imagePicker = Get.put(ImagePicker());
 
   showImageFromCamera() async {
@@ -22,7 +21,7 @@ class SelectViewModel extends GetxController {
 
   void moveToPickerView(String imagePath) {
     if (imagePath.isEmpty) return;
-    Get.toNamed('/picker', arguments: {
+    Get.toNamed('/pixel', arguments: {
       'path': imagePath,
     });
   }
@@ -32,5 +31,4 @@ class SelectViewModel extends GetxController {
     final String imagePath = image?.path ?? '';
     return imagePath;
   }
-
 }

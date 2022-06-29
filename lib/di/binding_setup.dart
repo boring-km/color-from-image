@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '/presentation/select/select_view_model.dart';
-import '../presentation/pixel/picker_view_model.dart';
+import '../presentation/pixel/pixel_view_model.dart';
 
 class SelectViewBindings extends Bindings {
   @override
