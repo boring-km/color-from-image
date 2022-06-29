@@ -11,7 +11,7 @@ class ShareUseCase {
     final savePath = (await _getShareFilePath(pngBytes)).replaceAll('file://', '');
     if (await File(savePath).exists()) {
       Log.i('is exists');
-      await Share.shareFiles([savePath], subject: 'Share Your Pixel Image');
+      await Share.shareFiles([savePath], text: 'Share Your Pixel Image', subject: 'Pixel Image');
       await File(savePath).delete();
     } else {
       Log.e('is not exists');

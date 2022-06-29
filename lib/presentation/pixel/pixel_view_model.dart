@@ -84,4 +84,6 @@ class PixelViewModel extends GetxController {
     ByteData pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
     return Uint8List.fromList(pngBytes.buffer.asUint8List());
   }
+
+  String get getSizeText => '$pixelWidth x $pixelHeight';
 }

@@ -48,6 +48,19 @@ class PixelView extends GetView<PixelViewModel> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        DecoratedBox(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              controller.getSizeText,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
