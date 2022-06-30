@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:color_picker/core/logger.dart';
 import 'package:color_picker/core/permissions.dart';
+import 'package:color_picker/utils/native_functions.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -10,11 +11,14 @@ class ShareUseCase {
   static share(ByteData pngBytes) async {
     final savePath = (await _getShareFilePath(pngBytes)).replaceAll('file://', '');
     if (await File(savePath).exists()) {
-      Log.i('is exists');
-      await Share.shareFiles([savePath], text: 'Share Your Pixel Image', subject: 'Pixel Image');
-      await File(savePath).delete();
+      Log.i('Temp Image is exists');
+      if (Platform.isAndroid) {
+        await Share.shareFiles([savePath], mimeTypes: ['image/png'], text: 'Share Your Pixel Image', subject: 'Pixel Image');
+      } else {
+        await NativeFunctions.shareImage(savePath);
+      }
     } else {
-      Log.e('is not exists');
+      Log.e('Temp Image is not exists');
     }
   }
 
