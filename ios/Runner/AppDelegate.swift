@@ -42,10 +42,8 @@ import simd
             return
         }
         let vc = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-//        vc.excludedActivityTypes = [.saveToCameraRoll]
-        
         controller.present(vc, animated: true, completion: nil)
-        result(["result": "true"])
+        result(true)
     }
     
     private func imagePathToImage(filePath: String) -> UIImage? {
