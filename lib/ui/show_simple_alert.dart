@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-showSimpleAlert(String msg) {
+void showSimpleAlert(String msg) {
+  // ignore: inference_failure_on_function_invocation
   showDialog(
     context: Get.context!,
     barrierDismissible: false,

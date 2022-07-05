@@ -3,7 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 Future<bool> checkPhotosPermission() async {
   if (!await Permission.photos.isGranted) {
     final res = await Permission.photos.request();
-    return await _processGranted(res);
+    return _processGranted(res);
   }
   return true;
 }
@@ -11,7 +11,7 @@ Future<bool> checkPhotosPermission() async {
 Future<bool> checkCameraPermission() async {
   if (!await Permission.camera.isGranted) {
     final res = await Permission.camera.request();
-    return await _processGranted(res);
+    return _processGranted(res);
   }
   return true;
 }
@@ -19,7 +19,7 @@ Future<bool> checkCameraPermission() async {
 Future<bool> checkStoragePermission() async {
   if (!await Permission.storage.isGranted) {
     final res = await Permission.storage.request();
-    return await _processGranted(res);
+    return _processGranted(res);
   }
   return true;
 }

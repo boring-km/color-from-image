@@ -23,6 +23,9 @@ dependencies:
   path_provider: ^2.0.11
   qr_flutter: ^4.0.0
 
+  ## lint
+  very_good_analysis: ^3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

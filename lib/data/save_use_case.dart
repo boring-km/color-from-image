@@ -10,7 +10,7 @@ class SaveUseCase {
       await ImageGallerySaver.saveImage(
         Uint8List.fromList(pngBytes.buffer.asUint8List()),
         quality: 100,
-        name: "pixel_image",
+        name: 'pixel_image',
         isReturnImagePathOfIOS: true,
       );
       return 'Image Saved!';

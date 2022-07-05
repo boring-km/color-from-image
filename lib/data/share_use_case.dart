@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_slow_async_io
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -8,14 +10,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ShareUseCase {
-  static share(ByteData pngBytes) async {
+  static Future<void> share(ByteData pngBytes) async {
     final savePath = (await _getShareFilePath(pngBytes)).replaceAll('file://', '');
     if (await File(savePath).exists()) {
       Log.i('Temp Image is exists');
       if (Platform.isAndroid) {
-        Share.shareFiles([savePath], mimeTypes: ['image/png'], text: 'Share Your Pixel Image', subject: 'Pixel Image');
+        await Share.shareFiles([savePath], mimeTypes: ['image/png'], text: 'Share Your Pixel Image', subject: 'Pixel Image');
       } else {
-        NativeFunctions.shareImage(savePath);
+        await NativeFunctions.shareImage(savePath);
       }
     } else {
       Log.e('Temp Image is not exists');
@@ -26,7 +28,7 @@ class ShareUseCase {
     final hasPermission = await checkStoragePermission();
     Log.i('hasPermission: $hasPermission');
     if (hasPermission) {
-      final Uint8List bytes = Uint8List.fromList(pngBytes.buffer.asUint8List());
+      final bytes = Uint8List.fromList(pngBytes.buffer.asUint8List());
       final dir = await getApplicationDocumentsDirectory();
       final filePath = '${dir.path}/pixel_temp.jpg';
       final file = File(filePath);

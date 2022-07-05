@@ -13,8 +13,7 @@ class QrView extends GetView {
         child: QrImage(
           data: '1234567890',
           foregroundColor: Colors.lightBlue,
-          version: QrVersions.auto,
-          size: 200.0,
+          size: 200,
         ),
       ),
     );

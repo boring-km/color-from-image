@@ -18,7 +18,8 @@ class PixelView extends GetView<PixelViewModel> {
             appBar: AppBar(
               backgroundColor: Colors.black,
               leading: GestureDetector(
-                onTap: () => Get.back(),
+                // ignore: inference_failure_on_generic_invocation
+                onTap: Get.back,
                 child: Container(
                   width: 40,
                   height: 40,
@@ -34,7 +35,6 @@ class PixelView extends GetView<PixelViewModel> {
                 children: [
                   Center(
                     child: InteractiveViewer(
-                      panEnabled: true, // Set it to false
                       minScale: 1,
                       maxScale: 4,
                       child: Image.memory(
@@ -54,7 +54,7 @@ class PixelView extends GetView<PixelViewModel> {
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(4),
                             child: Text(
                               controller.getSizeText,
                               style: const TextStyle(fontSize: 20),
@@ -62,7 +62,7 @@ class PixelView extends GetView<PixelViewModel> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8),
                           child: SizedBox(
                             height: 64,
                             child: Row(

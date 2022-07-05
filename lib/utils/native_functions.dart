@@ -4,7 +4,7 @@ class NativeFunctions {
   static const methodChannel = MethodChannel('pixel_image');
 
   static Future<void> shareImage(String filePath) async {
-    methodChannel.invokeMethod('shareImage', {
+    await methodChannel.invokeMethod('shareImage', {
       'filePath': filePath,
     });
   }

@@ -5,30 +5,34 @@ import 'package:image_picker/image_picker.dart';
 class SelectViewModel extends GetxController {
   final _imagePicker = Get.put(ImagePicker());
 
-  showImageFromCamera() async {
+  Future<void> showImageFromCamera() async {
     if (await checkCameraPermission()) {
-      String imagePath = await _getImagePath(ImageSource.camera);
+      final imagePath = await _getImagePath(ImageSource.camera);
       moveToPickerView(imagePath);
     }
   }
 
-  showImageFromGallery() async {
+  Future<void> showImageFromGallery() async {
     if (await checkPhotosPermission()) {
-      String imagePath = await _getImagePath(ImageSource.gallery);
+      final imagePath = await _getImagePath(ImageSource.gallery);
       moveToPickerView(imagePath);
     }
   }
 
   void moveToPickerView(String imagePath) {
     if (imagePath.isEmpty) return;
-    Get.toNamed('/pixel', arguments: {
-      'path': imagePath,
-    });
+    // ignore: inference_failure_on_function_invocation
+    Get.toNamed(
+      '/pixel',
+      arguments: {
+        'path': imagePath,
+      },
+    );
   }
 
   Future<String> _getImagePath(ImageSource imageSource) async {
-    final XFile? image = await _imagePicker.pickImage(source: imageSource);
-    final String imagePath = image?.path ?? '';
+    final image = await _imagePicker.pickImage(source: imageSource);
+    final imagePath = image?.path ?? '';
     return imagePath;
   }
 }

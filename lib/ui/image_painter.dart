@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PixelPainter extends CustomPainter {
-  final List<Color> colors;
-  final int xCount;
-  final int yCount;
-  double pixel = 0;
 
   PixelPainter({
     required this.colors,
     required this.xCount,
     required this.yCount,
   });
+  final List<Color> colors;
+  final int xCount;
+  final int yCount;
+  double pixel = 0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -20,8 +20,8 @@ class PixelPainter extends CustomPainter {
       return;
     }
 
-    double screenWidth = Get.context?.size?.width ?? 390.0;
-    double screenHeight = Get.context?.size?.height ?? 800.0;
+    final screenWidth = Get.context?.size?.width ?? 390.0;
+    final screenHeight = Get.context?.size?.height ?? 800.0;
     if (screenWidth < screenHeight) {
       pixel = screenWidth / xCount - 1;
     } else {
@@ -36,12 +36,12 @@ class PixelPainter extends CustomPainter {
       }
     }
 
-    Log.d("xCount: $xCount, yCount: $yCount");
-    Log.d("pixel: $pixel, screenWidth: $screenWidth, screenHeight: $screenHeight");
+    Log.d('xCount: $xCount, yCount: $yCount');
+    Log.d('pixel: $pixel, screenWidth: $screenWidth, screenHeight: $screenHeight');
 
-    for (int y = 0; y < yCount; y++) {
-      for (int x = 0; x < xCount; x++) {
-        var cur = y * xCount + x;
+    for (var y = 0; y < yCount; y++) {
+      for (var x = 0; x < xCount; x++) {
+        final cur = y * xCount + x;
         final paint = Paint()
           ..color = colors[cur]
           ..style = PaintingStyle.fill;

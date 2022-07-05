@@ -10,15 +10,16 @@ import 'package:image/image.dart' as lib;
 
 class ImageUseCase {
   static Future<lib.Image> getImageFrom(File originalFile) async {
-    Uint8List bytes = await _getImageBytes(originalFile);
-    List<int> values = bytes.buffer.asUint8List();
-    final lib.Image image = lib.decodeImage(values)!;
+    final bytes = await _getImageBytes(originalFile);
+    final List<int> values = bytes.buffer.asUint8List();
+    final image = lib.decodeImage(values)!;
     return image;
   }
 
   static Future<Uint8List> _getImageBytes(File file) async {
+    // ignore: avoid_slow_async_io
     if (await file.exists()) {
-      var imageBytes = await file.readAsBytes();
+      final imageBytes = await file.readAsBytes();
       return imageBytes;
     } else {
       return Uint8List(0);
@@ -26,15 +27,15 @@ class ImageUseCase {
   }
 
   static List<Color> getPixelImage(lib.Image image, int pixel) {
-    var width = image.width;
-    var pixelHeight = getHeight(image, pixel);
+    final width = image.width;
+    final pixelHeight = getHeight(image, pixel);
 
-    final List<Color> colors = <Color>[];
+    final colors = <Color>[];
     final chunk = width ~/ (pixel + 1);
 
-    for (int y = 0; y < pixelHeight; y++) {
-      for (int x = 0; x < pixel; x++) {
-        int p = image.getPixel(x * chunk, y * chunk);
+    for (var y = 0; y < pixelHeight; y++) {
+      for (var x = 0; x < pixel; x++) {
+        final p = image.getPixel(x * chunk, y * chunk);
         colors.add(abgrToColor(p));
       }
     }
@@ -56,18 +57,17 @@ class ImageUseCase {
   }
 
   static void _drawPixels(List<Color> colors, int xCount, int yCount, Canvas canvas, Size size) {
-    final painter = PixelPainter(colors: colors, xCount: xCount, yCount: yCount);
-    painter.paint(canvas, size);
+    PixelPainter(colors: colors, xCount: xCount, yCount: yCount).paint(canvas, size);
   }
 
   static Size _getPixelImageSize(int xCount, int yCount) {
-    double pixel = _getPixelWidth(xCount, yCount);
+    final pixel = _getPixelWidth(xCount, yCount);
     return Size(xCount * pixel, yCount * pixel);
   }
 
   static double _getPixelWidth(int xCount, int yCount) {
-    double screenWidth = Get.context?.size?.width ?? 390.0;
-    double screenHeight = Get.context?.size?.height ?? 800.0;
+    final screenWidth = Get.context?.size?.width ?? 390.0;
+    final screenHeight = Get.context?.size?.height ?? 800.0;
     var pixel = screenWidth / xCount - 1;
     while (true) {
       pixel += 0.00001;

@@ -30,23 +30,23 @@ class PixelViewModel extends GetxController {
     Future.microtask(() async {
       image = ImageUseCase.getImageFrom(_imageFile);
       pixelWidth = _initializeWidth(await image);
-      _showPixels(pixelWidth);
+      await _showPixels(pixelWidth);
     });
   }
 
   int _initializeWidth(lib.Image image) {
-    int imageWidth = image.width;
+    final imageWidth = image.width;
     _pixelWidthList = GetDivisors.by(imageWidth);
     return _pixelWidthList[_pixelIndex];
   }
 
-  _showPixels(int selectedPixel) async {
+  Future<void>_showPixels(int selectedPixel) async {
     pixelWidth = selectedPixel - 1;
-    final lib.Image img = await image;
+    final img = await image;
     colors = ImageUseCase.getPixelImage(img, pixelWidth);
     pixelHeight = ImageUseCase.getHeight(img, pixelWidth);
     imageBytes = await getPicture();
-    Future.delayed(const Duration(milliseconds: 300), () => update());
+    Future.delayed(const Duration(milliseconds: 300), update);
   }
 
   bool hasNext() => _pixelIndex + 1 < _pixelWidthList.length;
@@ -57,31 +57,31 @@ class PixelViewModel extends GetxController {
 
   String hasBeforeString() => hasBefore() ? 'Prev' : 'First';
 
-  get showNext => () {
+  Null Function() get showNext => () {
         if (hasNext()) {
           _showPixels(_pixelWidthList[++_pixelIndex]);
         }
       };
 
-  get showBefore => () {
+  Null Function() get showBefore => () {
         if (hasBefore()) {
           _showPixels(_pixelWidthList[--_pixelIndex]);
         }
       };
 
-  get savePicture => () async {
-        ByteData pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
-        String resultMessage = await SaveUseCase.save(pngBytes);
+  Future<void> Function() get savePicture => () async {
+        final pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
+        final resultMessage = await SaveUseCase.save(pngBytes);
         showSimpleAlert(resultMessage);
       };
 
-  void sharePicture() async {
-    ByteData pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
-    ShareUseCase.share(pngBytes);
+  Future<void> sharePicture() async {
+    final pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
+    await ShareUseCase.share(pngBytes);
   }
 
-  getPicture() async {
-    ByteData pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
+  Future<Uint8List> getPicture() async {
+    final pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
     return Uint8List.fromList(pngBytes.buffer.asUint8List());
   }
 
