@@ -17,7 +17,7 @@ class ShareUseCase {
       if (Platform.isAndroid) {
         await Share.shareFiles([savePath], mimeTypes: ['image/png'], text: 'Share Your Pixel Image', subject: 'Pixel Image');
       } else {
-        await NativeFunctions.shareImage(savePath);
+        await NativeFunctions.shareImage(savePath, 'Share Your Pixel Image');
       }
     } else {
       Log.e('Temp Image is not exists');

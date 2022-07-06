@@ -17,8 +17,9 @@ import simd
             
             if call.method == "shareImage" {
                 if let args = call.arguments as? Dictionary<String, Any>,
-                   let filePath = args["filePath"] as? String {
-                    self.shareImage(filePath, controller, result)
+                   let filePath = args["filePath"] as? String,
+                   let msg = args["msg"] as? String {
+                    self.shareImage(filePath, msg, controller, result)
                 }
             } else {
                 result(FlutterMethodNotImplemented)
@@ -37,11 +38,11 @@ import simd
         return UIInterfaceOrientationMask.portrait
     }
     
-    private func shareImage(_ filePath: String, _ controller: FlutterViewController, _ result: FlutterResult) {
+    private func shareImage(_ filePath: String, _ msg: String, _ controller: FlutterViewController, _ result: FlutterResult) {
         guard let image = imagePathToImage(filePath: filePath) else {
             return
         }
-        let vc = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        let vc = UIActivityViewController(activityItems: [image, msg], applicationActivities: nil)
         controller.present(vc, animated: true, completion: nil)
         result(true)
     }
