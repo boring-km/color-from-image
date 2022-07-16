@@ -1,8 +1,8 @@
 import 'dart:collection';
 
 class GetDivisors {
-  static const limitPixelSize = 500;
-  static const minimumPixelLevel = 8;
+  static const limitPixelSize = 120;
+  static const minimumPixelLevel = 6;
 
   static List<int> by(int num) {
     final mid = num / 2;
