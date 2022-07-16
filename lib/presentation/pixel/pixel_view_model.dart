@@ -5,7 +5,7 @@ import 'package:color_picker/data/get_divisors.dart';
 import 'package:color_picker/data/image_use_case.dart';
 import 'package:color_picker/data/save_use_case.dart';
 import 'package:color_picker/data/share_use_case.dart';
-import 'package:color_picker/ui/show_simple_alert.dart';
+import 'package:color_picker/ui/show_simple_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -40,7 +40,7 @@ class PixelViewModel extends GetxController {
     return _pixelWidthList[_pixelIndex];
   }
 
-  Future<void>_showPixels(int selectedPixel) async {
+  Future<void> _showPixels(int selectedPixel) async {
     pixelWidth = selectedPixel - 1;
     final img = await image;
     colors = ImageUseCase.getPixelImage(img, pixelWidth);
@@ -72,7 +72,7 @@ class PixelViewModel extends GetxController {
   Future<void> Function() get savePicture => () async {
         final pngBytes = await ImageUseCase.getPixelImageBytes(colors, pixelWidth, pixelHeight);
         final resultMessage = await SaveUseCase.save(pngBytes);
-        showSimpleAlert(resultMessage);
+        showSimpleMessage(resultMessage);
       };
 
   Future<void> sharePicture() async {
@@ -86,4 +86,6 @@ class PixelViewModel extends GetxController {
   }
 
   String get getSizeText => '$pixelWidth x $pixelHeight';
+
+  bool get isAndroid => Platform.isAndroid;
 }
