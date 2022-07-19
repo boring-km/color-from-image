@@ -29,7 +29,10 @@ class PixelView extends GetView<PixelViewModel> {
                   child: const Icon(CupertinoIcons.back),
                 ),
               ),
-              title: const Text('Show Pixels'),
+              title: const Text(
+                'Show Pixels',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
             ),
             backgroundColor: Colors.black,
             body: SafeArea(
@@ -57,7 +60,7 @@ class PixelView extends GetView<PixelViewModel> {
                             borderRadius: BorderRadius.all(Radius.circular(8)),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(4),
+                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                             child: Text(
                               controller.getSizeText,
                               style: const TextStyle(fontSize: 20),
@@ -97,7 +100,7 @@ class PixelView extends GetView<PixelViewModel> {
           style: ElevatedButton.styleFrom(primary: Colors.white),
           child: Text(
             controller.hasBeforeString(),
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 18),
           ),
         ),
         ElevatedButton(
@@ -126,7 +129,7 @@ class PixelView extends GetView<PixelViewModel> {
           style: ElevatedButton.styleFrom(primary: Colors.white),
           child: Text(
             controller.hasNextString(),
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900, fontSize: 18),
           ),
         ),
       ],

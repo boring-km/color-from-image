@@ -12,7 +12,10 @@ class SelectView extends GetView<SelectViewModel> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Show Pixels'),
+        title: const Text(
+          'Show Pixels',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
       ),
       body: SafeArea(
         child: Center(

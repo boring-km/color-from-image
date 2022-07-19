@@ -23,6 +23,9 @@ dependencies:
   path_provider: ^2.0.11
   qr_flutter: ^4.0.0
 
+  ## fonts
+  google_fonts: ^3.0.1
+
   ## lint
   very_good_analysis: ^3.0.1
 
