@@ -2,12 +2,12 @@ import 'package:logger/logger.dart';
 
 class Log {
   static void d(dynamic msg) {
-    Logger(printer: PrettyPrinter(printEmojis: true, colors: false, printTime: true, methodCount: 0)).d(msg);
+    Logger(printer: PrettyPrinter(colors: false, printTime: true, methodCount: 0)).d(msg);
   }
   static void i(dynamic msg) {
-    Logger(printer: PrettyPrinter(printEmojis: true, colors: false, printTime: true, methodCount: 0)).i(msg);
+    Logger(printer: PrettyPrinter(colors: false, printTime: true, methodCount: 0)).i(msg);
   }
   static void e(dynamic msg) {
-    Logger(printer: PrettyPrinter(printEmojis: true, colors: false, printTime: true, methodCount: 0)).e(msg);
+    Logger(printer: PrettyPrinter(colors: false, printTime: true, methodCount: 0)).e(msg);
   }
 }

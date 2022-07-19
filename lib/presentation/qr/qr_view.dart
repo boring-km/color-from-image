@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class QrView extends GetView {
+class QrView extends StatelessWidget {
   const QrView({Key? key}) : super(key: key);
 
   @override

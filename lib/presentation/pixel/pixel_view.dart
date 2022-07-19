@@ -10,74 +10,82 @@ class PixelView extends GetView<PixelViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<PixelViewModel>(builder: (controller) {
-      return GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            leading: GestureDetector(
-              // ignore: inference_failure_on_generic_invocation
-              onTap: Get.back,
-              child: Container(
-                width: 40,
-                height: 40,
-                color: Colors.transparent,
-                child: const Icon(CupertinoIcons.back),
+    return GetBuilder<PixelViewModel>(
+      builder: (controller) {
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              leading: GestureDetector(
+                // ignore: inference_failure_on_generic_invocation
+                onTap: Get.back,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  color: Colors.transparent,
+                  child: const Icon(CupertinoIcons.back),
+                ),
               ),
+              title: const Text('Show Pixels'),
             ),
-            title: const Text('Show Pixels'),
-          ),
-          backgroundColor: Colors.black,
-          body: SafeArea(
-            child: Stack(
-              children: [
-                Center(
-                  child: InteractiveViewer(
-                    minScale: 1,
-                    maxScale: 4,
-                    child: Image.memory(
-                      controller.imageBytes,
-                      errorBuilder: (context, _, __) => const SizedBox.shrink(),
+            backgroundColor: Colors.black,
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  Center(
+                    child: InteractiveViewer(
+                      minScale: 1,
+                      maxScale: 4,
+                      child: Image.memory(
+                        controller.imageBytes,
+                        errorBuilder: (context, _, __) =>
+                            const SizedBox.shrink(),
+                      ),
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      DecoratedBox(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Text(
-                            controller.getSizeText,
-                            style: const TextStyle(fontSize: 20),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DecoratedBox(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Text(
+                              controller.getSizeText,
+                              style: const TextStyle(fontSize: 20),
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 36, top: 8),
-                        child: SizedBox(
-                          height: 64,
-                          child: buildBottomButtons(controller),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            bottom: 36,
+                            top: 8,
+                          ),
+                          child: SizedBox(
+                            height: 64,
+                            child: buildBottomButtons(controller),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Row buildBottomButtons(PixelViewModel controller) {
