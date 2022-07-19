@@ -43,6 +43,7 @@ import simd
             return
         }
         let vc = UIActivityViewController(activityItems: [image, msg], applicationActivities: nil)
+        vc.popoverPresentationController?.sourceView = UIImageView(image: image)
         controller.present(vc, animated: true, completion: nil)
         result(true)
     }
