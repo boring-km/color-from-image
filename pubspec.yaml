@@ -23,6 +23,10 @@ dependencies:
   path_provider: ^2.0.11
   qr_flutter: ^4.0.0
 
+  # camera
+  camera: ^0.10.0
+  video_player: ^2.4.5
+
   ## fonts
   google_fonts: ^3.0.1
 
