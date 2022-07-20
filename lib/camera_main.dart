@@ -57,7 +57,43 @@ class _CameraAppState extends State<CameraApp> {
       return Container();
     }
     return MaterialApp(
-      home: CameraPreview(controller),
+      debugShowCheckedModeBanner: false,
+      home: CameraScreen(
+        controller: controller,
+      ),
+    );
+  }
+}
+
+class CameraScreen extends StatelessWidget {
+  final CameraController controller;
+
+  CameraScreen({Key? key, required this.controller}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            height: height,
+            child: CameraPreview(controller),
+          ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: Icon(
+                Icons.circle,
+                color: Colors.white,
+                size: 60,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
