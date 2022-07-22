@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:color_picker/core/permissions.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,8 +9,7 @@ class SelectViewModel extends GetxController {
 
   Future<void> showImageFromCamera() async {
     if (await checkCameraPermission()) {
-      final imagePath = await _getImagePath(ImageSource.camera);
-      moveToPickerView(imagePath);
+      unawaited(Get.toNamed('/camera'));
     }
   }
 

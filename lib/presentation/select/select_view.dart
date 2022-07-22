@@ -23,9 +23,7 @@ class SelectView extends GetView<SelectViewModel> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
-                  controller.showImageFromCamera();
-                },
+                onTap: controller.showImageFromCamera,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

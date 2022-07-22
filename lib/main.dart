@@ -1,4 +1,5 @@
 import 'package:color_picker/di/binding_setup.dart';
+import 'package:color_picker/presentation/camera/camera_view.dart';
 import 'package:color_picker/presentation/pixel/pixel_view.dart';
 import 'package:color_picker/presentation/qr/qr_view.dart';
 import 'package:color_picker/presentation/select/select_view.dart';
@@ -25,6 +26,11 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/select', page: () => const SelectView(), binding: SelectViewBindings()),
         GetPage(name: '/pixel', page: () => const PixelView(), binding: PixelViewBindings()),
+        GetPage(
+          name: '/camera',
+          page: () => const CameraView(),
+          binding: CameraViewBindings(),
+        ),
         GetPage(name: '/qrcode', page: () => const QrView()),
       ],
     );
