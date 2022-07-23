@@ -20,20 +20,22 @@ class CameraView extends GetView<CameraViewModel> {
               height: height,
               child: controller.isReady() ? CameraPreview(controller.cameraController!) : null,
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: GestureDetector(
-                  onTap: controller.takePicture,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      border: Border.all(color: Colors.red),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: GestureDetector(
+                    onTap: controller.takePicture,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        border: Border.all(color: Colors.red),
+                      ),
+                      width: 50,
+                      height: 50,
                     ),
-                    width: 50,
-                    height: 50,
                   ),
                 ),
               ),

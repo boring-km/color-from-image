@@ -11,7 +11,11 @@ class CameraViewModel extends GetxController {
   void onInit() {
     Future.microtask(() async {
       final cameras = await availableCameras();
-      cameraController = CameraController(cameras[0], ResolutionPreset.max);
+      cameraController = CameraController(
+        cameras[0],
+        ResolutionPreset.max,
+        enableAudio: false,
+      );
       await cameraController?.initialize().then((_) {
         update();
       }).catchError((Object e) {

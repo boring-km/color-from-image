@@ -2,7 +2,7 @@ name: color_picker
 description: 컬러피커
 
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.2+2
 
 environment:
   sdk: ">=2.15.0 <3.0.0"
@@ -25,7 +25,6 @@ dependencies:
 
   # camera
   camera: ^0.10.0
-  video_player: ^2.4.5
 
   ## fonts
   google_fonts: ^3.0.1
