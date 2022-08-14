@@ -53,6 +53,11 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.debug
+            minifyEnabled true
+
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
 }
