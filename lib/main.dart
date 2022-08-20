@@ -1,8 +1,4 @@
-import 'package:color_picker/di/binding_setup.dart';
-import 'package:color_picker/presentation/camera/camera_view.dart';
-import 'package:color_picker/presentation/pixel/pixel_view.dart';
-import 'package:color_picker/presentation/qr/qr_view.dart';
-import 'package:color_picker/presentation/select/select_view.dart';
+import 'package:color_picker/routes.dart';
 import 'package:color_picker/utils/wait_screen_size.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,18 +17,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Color Picker',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/select',
+      initialRoute: Routes.select,
       theme: _buildTheme(context),
-      getPages: [
-        GetPage(name: '/select', page: () => const SelectView(), binding: SelectViewBindings()),
-        GetPage(name: '/pixel', page: () => const PixelView(), binding: PixelViewBindings()),
-        GetPage(
-          name: '/camera',
-          page: () => const CameraView(),
-          binding: CameraViewBindings(),
-        ),
-        GetPage(name: '/qrcode', page: () => const QrView()),
-      ],
+      getPages: Pages.pages,
     );
   }
 
