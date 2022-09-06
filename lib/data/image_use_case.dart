@@ -12,15 +12,13 @@ class ImageUseCase {
   static Future<lib.Image> getImageFrom(File originalFile) async {
     final bytes = await _getImageBytes(originalFile);
     final List<int> values = bytes.buffer.asUint8List();
-    final image = lib.decodeImage(values)!;
-    return image;
+    return lib.decodeImage(values)!;
   }
 
   static Future<Uint8List> _getImageBytes(File file) async {
     // ignore: avoid_slow_async_io
     if (await file.exists()) {
-      final imageBytes = await file.readAsBytes();
-      return imageBytes;
+      return await file.readAsBytes();
     } else {
       return Uint8List(0);
     }
